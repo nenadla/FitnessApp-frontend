@@ -1,0 +1,150 @@
+<div class="flex flex-col">
+    <div class="flex flex-col relative">
+         <label
+            class="flex items-center w-fit bg-bg_primary rounded-md px-1 absolute left-2 -translate-y-1/2 text-sm text-primary_h z-1"
+            [class.top-1/2]="!isFocused() && !fieldValue() && selectedOptions().length === 0"
+            [class.top-0]="isFocused() || fieldValue() || selectedOptions().length > 0"
+            [class.ml-6]="icon() && !isFocused() && !fieldValue() && selectedOptions().length === 0"
+            [class.text-xs!]="isFocused() || fieldValue() || selectedOptions().length > 0"
+            [class.text-text_secondary_h!]="isFocused()"
+            [class.bg-disabled]="!isEnabled()"
+            for="autocomplete-input-{{label().split(' ').join('-')}}"
+        >
+            {{label()}} <span class="text-error">{{ isRequired() ? '*' : '' }}</span>
+            @if (info()) {
+                <app-icon [tooltip]="info()" class="ml-1 cursor-help size-4" icon="info-circle"/>
+            }
+        </label>
+        <div
+            class="autocomplete-wrapper flex flex-col w-full rounded-xl border-border border py-1.5 bg-bg_primary min-h-12 cursor-text"
+            [class.is-invalid]="showErrors()"
+            [class.is-focus]="isFocused()"
+            [class.is-disabled]="!isEnabled()"
+            (click)="autocompleteInputEl.focus()"
+        >
+            @if(selectedOptions().length > 0){
+                <div class="flex items-center flex-wrap gap-1.5 py-1 px-3">
+                    @for (chip of selectedOptions(); track $index) {
+                        <div class="flex items-center px-2 py-1 rounded-2xl text-text_secondary_h border-[#DFF2FF] bg-[#F1F8FF] text-xs font-medium gap-1.5 shadow-sm text-wrap truncate" [title]="chip.label ?? chip">
+                            {{ chip.label ?? chip }}
+                            <app-icon icon="close-circle" class="stroke-text_secondary_h min-w-3.5 size-3.5 cursor-pointer hover:scale-105" (click)="$event.stopPropagation(); removeSelected.emit($index)" tooltip="Remove"/>
+                        </div>
+                    }
+                </div>
+            }
+            <div class="flex items-center w-full relative">
+                <input
+                    #autocompleteInputEl
+                    id="autocomplete-input-{{label().split(' ').join('-')}}"
+                    class="flex-1 min-w-0 outline-none text-sm text-text_primary bg-transparent border-none! h-8 pr-10 overflow-hidden truncate"
+                    [class.pl-8]="icon()"
+                    [class.pl-3]="!icon()"
+                    (focus)="isFocused.set(true)"
+                    (blur)="isFocused.set(false)"
+                    [formField]="field()"
+                    [placeholder]="isFocused() || selectedOptions().length > 0 ? (placeholder() ?? '') : ''"
+                    (keydown.enter)="onSelect.emit(fieldValue())"
+                    [matAutocomplete]="auto"
+                >
+                @if(loading()){
+                    <div class="size-5 min-w-5 spinner border-2! absolute right-3 bottom-1.25"></div>
+                }
+                @else if(fieldValue() && isEnabled()){
+                    <app-icon
+                        class="size-5 min-w-5 stroke-secondary hover:stroke-primary cursor-pointer absolute right-3 bottom-1.25"
+                        icon="close"
+                        (click)="$event.stopPropagation(); clearValue()"
+                    />
+                }
+            </div>
+        </div>
+        @if(icon() === 'organizations'){
+            <app-icon class="size-5 absolute left-2 top-1/2 -translate-y-1/2 fill-light cursor-pointer" icon="organizations" [class.fill-text_secondary_h]="isFocused()"/>
+        }
+    </div>
+
+        <mat-autocomplete
+            autoActiveFirstOption
+            #auto="matAutocomplete"
+            (optionSelected)="onSelect.emit($event.option.value)"
+            hideSingleSelectionIndicator
+        >
+        @if(loading()){
+            <mat-option [disabled]="true" class="text-sm! min-h-10!">Loading...</mat-option>
+        }
+        @else{
+            @if (tableOptions(); as tableItems) {
+                @if (tableColumns() && tableItems.length > 0) {
+                    <mat-option [disabled]="true" class="text-xs! min-h-10! table-header opacity-100!">
+                        <div class="flex items-center w-full min-h-10 font-semibold text-primary">
+                            @for (column of tableColumns(); track column; let last = $last) {
+                                <span
+                                    class="px-3"
+                                    [class.border-r]="!last"
+                                    [class.border-border]="!last"
+                                    [style.width]="tableColumnWidth($index)"
+                                >
+                                    {{ column }}
+                                </span>
+                            }
+                        </div>
+                    </mat-option>
+                }
+                @for (option of tableItems; track option.value) {
+                    <mat-option [value]="option.value" class="text-sm! min-h-10! table-option">
+                        <div class="flex items-center w-full min-h-10">
+                            @for (column of option.columns; track $index; let last = $last) {
+                                <span
+                                    class="truncate px-3"
+                                    [class.border-r]="!last"
+                                    [class.border-border]="!last"
+                                    [class.text-text_secondary]="!$first"
+                                    [title]="column"
+                                    [style.width]="tableColumnWidth($index)"
+                                >
+                                    {{ column }}
+                                </span>
+                            }
+                        </div>
+                    </mat-option>
+                }
+                @empty {
+                    <mat-option [disabled]="true" class="text-sm! min-h-10!">No items</mat-option>
+                }
+            }
+            @else {
+            @if (tableColumns() && options().length > 0) {
+                <mat-option [disabled]="true" class="text-xs! min-h-10! table-header opacity-100!">
+                    <div class="flex items-center w-full min-h-10 font-semibold text-primary">
+                        <span class="w-2/3 px-3 border-r border-border">{{ tableColumns()![0] }}</span>
+                        <span class="w-1/3 px-3">{{ tableColumns()![1] }}</span>
+                    </div>
+                </mat-option>
+            }
+            @for (option of options(); track option;) {
+                <mat-option [value]="option" class="text-sm! min-h-10!" [class.table-option]="!!parseOption(option)">
+                    @if (parseOption(option); as parsed) {
+                        <div class="flex items-center w-full min-h-10">
+                            <span class="w-2/3 truncate px-3 border-r border-border" [title]="parsed.col1">{{ parsed.col1 }}</span>
+                            <span class="w-1/3 px-3 text-text_secondary">{{ parsed.col2 }}</span>
+                        </div>
+                    } @else {
+                        {{option}}
+                    }
+                </mat-option>
+            }
+            @empty {
+                <mat-option [disabled]="true" class="text-sm! min-h-10!">No items</mat-option>
+            }
+            }
+        }
+    </mat-autocomplete>
+
+    @if (showErrors() && firstErrorMessage()) {
+        <div class="invalid-feedback">{{ firstErrorMessage() }}</div>
+    }
+    @else if(showErrorSpan()) {
+        <span class="h-3.5"></span>
+    }
+
+</div>

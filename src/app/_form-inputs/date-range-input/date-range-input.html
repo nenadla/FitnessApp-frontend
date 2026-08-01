@@ -1,0 +1,46 @@
+<div class="flex flex-col">
+    <div class="flex flex-col relative">
+        <label
+            class="flex items-center w-fit bg-bg_primary rounded-md px-1 absolute left-2 -translate-y-1/2 top-1/2 text-sm text-primary_h"
+            [class.top-0!]="dp.opened || fieldStart() || fieldEnd()"
+            [class.text-xs!]="dp.opened || fieldStart() || fieldEnd()"
+            [class.text-text_secondary_h!]="dp.opened"
+            for="date-range-input-{{label().split(' ').join('-')}}"
+        >
+            {{label()}} <span class="text-error">{{ isRequired() ? '*' : '' }}</span>
+        </label>
+        <mat-date-range-input
+            id="date-range-input-{{label().split(' ').join('-')}}"
+            [formGroup]="bridgeForm"
+            [rangePicker]="dp"
+            class="w-full rounded-xl border-border border outline-none px-3 text-sm h-12 text-primary hover:border-primary"
+            [class.is-invalid]="showErrors()"
+            [class.is-focus]="dp.opened"
+            (click)="dp.open()"
+        >
+            <input matStartDate class="text-sm!" formControlName="start" [placeholder]="dp.opened ? 'Start date' : ''">
+            <input matEndDate class="text-sm!" formControlName="end" [placeholder]="dp.opened ? 'End date' : ''">
+        </mat-date-range-input>
+
+        <app-icon
+            class="absolute right-2 top-1/2 -translate-y-1/2 size-5 min-w-5 stroke-light hover:stroke-primary cursor-pointer"
+            icon="calendar"
+        />
+
+        @if(fieldStart() && fieldEnd()){
+            <app-icon
+                class="absolute right-9 top-1/2 -translate-y-1/2 size-5 min-w-5 stroke-secondary hover:stroke-primary cursor-pointer"
+                icon="close"
+                (click)="$event.stopPropagation(); clearValue()"
+            />
+        }
+        <mat-date-range-picker #dp />
+    </div>
+
+    @if (showErrors()) {
+        <div class="invalid-feedback">{{ firstErrorMessage() }}</div>
+    }
+    @else {
+        <span class="h-3.5"></span>
+    }
+</div>

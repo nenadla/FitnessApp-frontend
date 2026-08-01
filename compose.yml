@@ -1,0 +1,10 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: retro-fitness-frontend:latest
+    restart: unless-stopped
+    init: true
+    ports:
+      - "127.0.0.1:8080:80"

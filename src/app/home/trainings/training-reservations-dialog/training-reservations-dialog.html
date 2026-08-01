@@ -1,0 +1,65 @@
+<div
+  class="flex h-dvh w-screen flex-col bg-white sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:w-[50rem]"
+  cdkDrag
+  cdkDragRootElement=".mat-mdc-dialog-container"
+  aria-label="Prijavljeni korisnici"
+>
+  <div class="dialog-header cursor-grab" cdkDragHandle>
+    <div>
+      <h2 class="m-0 text-xl font-semibold text-neutral-900">
+        {{ training.title }} - {{ getDayOfWeek(training.startTime) }} {{ training.startTime | date: 'dd.MM.yyyy.' }}
+      </h2>
+      <p class="mt-1 text-sm text-neutral-500">Prijavljeni korisnici</p>
+    </div>
+
+    <app-button-icon class="ml-auto" color="transparent" tooltip="Zatvori" (onClick)="close()">
+      <app-icon icon="close" class="size-5 stroke-current" />
+    </app-button-icon>
+  </div>
+
+  <div class="dialog-content p-6">
+    <div class="retro-table-wrap relative">
+      @if (isLoading()) {
+        <div class="absolute inset-0 z-10 grid min-h-56 place-items-center bg-white/75">
+          <div class="size-8 animate-spin rounded-full border-[3px] border-primary border-t-transparent"></div>
+        </div>
+      }
+
+      <table mat-table [dataSource]="dataSource" class="retro-table">
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>Korisnik</th>
+          <td mat-cell *matCellDef="let reservation" class="font-medium">{{ reservation.userFullName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let reservation">{{ reservation.userEmail }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let reservation">
+            <span class="retro-table-status">{{ getStatusLabel(reservation.status) }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reservedAt">
+          <th mat-header-cell *matHeaderCellDef>Rezervisano</th>
+          <td mat-cell *matCellDef="let reservation">{{ reservation.reservedAt | date: 'dd.MM.yyyy. HH:mm' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-mdc-row" *matNoDataRow>
+          <td class="mat-mdc-cell retro-table-empty" [attr.colspan]="displayedColumns.length">
+            Nema prijavljenih korisnika.
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="dialog-footer">
+    <app-button (onClick)="close()">Zatvori</app-button>
+  </div>
+</div>

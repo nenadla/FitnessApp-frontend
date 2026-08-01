@@ -1,0 +1,88 @@
+<div class="flex flex-col">
+
+    @if(loading()){
+        <app-skeleton class="" [number]="1" itemClass="h-12 w-full" />
+    }
+    @else{
+        <div class="flex flex-col relative">
+
+            <label
+                class="flex items-center w-fit bg-bg_primary rounded-md px-1 absolute left-2 -translate-y-1/2 top-1/2 text-sm text-primary_h z-2 pointer-events-none"
+                [class.top-0!]="isFocused() || hasValue()"
+                [class.text-xs!]="isFocused() || hasValue()"
+                [class.text-text_secondary_h!]="isFocused()"
+                [class.ml-8]="icon() && !isFocused() && !hasValue()"
+            >
+                {{label()}} <span class="text-error">{{ isRequired() ? '*' : '' }}</span>
+                @if (info()) {
+                    <app-icon [tooltip]="info()" class="ml-1 cursor-help size-4 pointer-events-auto" icon="info-circle"/>
+                }
+            </label>
+            <mat-form-field
+                class="w-full rounded-xl border-border border outline-none text-sm text-text_primary bg-bg_primary overflow-hidden hover:border-primary"
+                [class.h-12]="!multiple() || !(fieldValue()?.length)"
+                [class.min-h-12]="multiple() && fieldValue()?.length"
+                [class.is-invalid]="showErrors()"
+                [class.is-focus]="isFocused()"
+                [class.is-disabled]="!isEnabled()"
+                [class.pl-8]="icon()"
+            >
+                <mat-select
+                    class="my-auto"
+                    [formField]="field()"
+                    [multiple]="multiple()"
+                    [placeholder]="isFocused() ? placeholder() : ''"
+                    (focus)="isFocused.set(true)"
+                    (blur)="isFocused.set(false)"
+                >
+                    @if (multiple()) {
+                        <mat-select-trigger>
+                            <div class="flex items-center flex-wrap gap-1.5 py-0.5">
+                                @for (val of fieldValue(); track val; let i = $index) {
+                                    <div class="flex items-center px-2 py-0.5 rounded-2xl text-text_secondary_h border-[#DFF2FF] bg-[#F1F8FF] text-xs font-medium gap-1.5 shadow-sm truncate">
+                                        {{ getSelectedOption(val) }}
+                                        <app-icon icon="close-circle" class="stroke-text_secondary_h min-w-3.5 size-3.5 cursor-pointer hover:scale-105" (click)="removeItem(i, $event)" />
+                                    </div>
+                                }
+                            </div>
+                        </mat-select-trigger>
+                    }
+
+                    @for (option of options(); track option; let idx = $index) {
+                        <mat-option [value]="values()[idx]" class="text-sm! min-h-10!">{{option}}</mat-option>
+                    }
+                    @empty{
+                        <mat-option disabled class="text-sm! min-h-10!">No options available</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            @if(hasValue() && isEnabled() && enableClear()){
+                <app-icon
+                    class="absolute right-8 top-1/2 -translate-y-1/2 size-5 min-w-5 stroke-secondary hover:stroke-primary cursor-pointer"
+                    icon="close"
+                    (click)="$event.stopPropagation(); clearValue()"
+                />
+            }
+            @if(icon() === 'organizations'){
+                <app-icon class="size-5 absolute left-2 top-1/2 -translate-y-1/2 fill-light cursor-pointer" icon="organizations" [class.fill-text_secondary_h]="isFocused()"/>
+
+            }
+            @else if(icon() === 'calendar'){
+                <app-icon class="size-5 absolute left-2 top-1/2 -translate-y-1/2 stroke-light cursor-pointer" icon="calendar" [class.fill-text_secondary_h]="isFocused()"/>
+
+            }
+            @else if(icon() === 'file-check'){
+                <app-icon class="size-5 absolute left-2 top-1/2 -translate-y-1/2 stroke-primary cursor-pointer" icon="file-check"/>
+
+            }
+        </div>
+    }
+    @if (showErrors()) {
+        <div class="invalid-feedback">{{ firstErrorMessage() }}</div>
+    }
+    @else if(showErrorSpan()) {
+        <span class="h-3.5"></span>
+    }
+
+</div>

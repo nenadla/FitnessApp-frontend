@@ -1,0 +1,58 @@
+<form
+  class="flex h-dvh w-screen flex-col bg-white sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:w-[44rem]"
+  (submit)="submit($event)"
+  cdkDrag
+  cdkDragRootElement=".mat-mdc-dialog-container"
+>
+  <div class="dialog-header cursor-grab" cdkDragHandle>
+    <div>
+      <h2 class="m-0 text-xl font-semibold text-neutral-900">{{ isEdit ? 'Izmeni uplatu' : 'Nova uplata' }}</h2>
+      <p class="mt-1 text-sm text-neutral-500">
+        {{ isEdit ? 'Izmeni podatke evidentirane uplate.' : 'Evidentiraj novu uplatu za korisnika.' }}
+      </p>
+    </div>
+
+    <app-button-icon class="ml-auto" color="transparent" tooltip="Zatvori" (onClick)="close()">
+      <app-icon icon="close" class="size-5 stroke-current" />
+    </app-button-icon>
+  </div>
+
+  <div class="dialog-content grid gap-2 p-6 sm:grid-cols-2">
+    <div class="sm:col-span-2">
+      <app-autocomplete-input
+        label="Korisnik"
+        placeholder="Pretrazi korisnika"
+        [field]="paymentForm.userSearch"
+        [options]="userLabels()"
+        [loading]="isUsersLoading()"
+        (onChange)="selectUser($event)"
+        (onSelect)="selectUser($event)"
+      />
+    </div>
+
+    <app-select-input
+      label="Tip uplate"
+      [field]="paymentForm.paymentType"
+      [options]="['Paket 12 termina', 'Paket 6 termina', 'Pojedinacni termini']"
+      [values]="purchaseTypes"
+      (onChange)="changePaymentType($event)"
+    />
+    <app-text-input label="Iznos (RSD)" type="number" [field]="paymentForm.amount" />
+    <app-text-input
+      label="Broj termina"
+      type="number"
+      [field]="paymentForm.numberOfSessions"
+    />
+    @if (!isEdit) {
+      <app-date-input label="Start date" [field]="paymentForm.startDate" />
+    }
+    <div class="sm:col-span-2">
+      <app-textarea-input label="Napomena" [field]="paymentForm.note" />
+    </div>
+  </div>
+
+  <div class="dialog-footer">
+    <app-button (onClick)="close()">Odustani</app-button>
+    <app-button type="submit" color="primary">{{ isEdit ? 'Sacuvaj izmene' : 'Sacuvaj uplatu' }}</app-button>
+  </div>
+</form>

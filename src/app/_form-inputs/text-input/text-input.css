@@ -1,0 +1,30 @@
+
+input::placeholder {
+    font-size: 14px;
+}
+input:hover{
+    border: 1px solid var(--color-primary);
+}
+
+input.is-invalid{
+    border: var(--color-error) solid 1px;
+    color: var(--color-error) ;
+}
+input.is-focus{
+    border: var(--color-primary) solid 1px;
+    color: var(--color-primary);
+}
+
+input:disabled{
+    background-color: var(--color-disabled);
+    cursor: not-allowed;
+}
+
+.invalid-feedback{
+    color: var(--color-error);
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    height: 14px;
+    padding-left: 4px;
+}

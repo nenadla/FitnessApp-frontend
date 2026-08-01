@@ -1,0 +1,45 @@
+<form
+  class="flex h-dvh w-screen flex-col bg-white sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:w-[44rem]"
+  (submit)="submit($event)"
+  cdkDrag
+  cdkDragRootElement=".mat-mdc-dialog-container"
+  aria-label="Dodaj ili izmeni trening"
+>
+  <div class="dialog-header cursor-grab" cdkDragHandle>
+    <div>
+      <h2 class="m-0 text-xl font-semibold text-neutral-900">{{ isEdit ? 'Izmeni trening' : 'Dodaj trening' }}</h2>
+      <p class="mt-1 text-sm text-neutral-500">
+        {{ isEdit ? 'Izmeni podatke za odabrani trening.' : 'Unesi podatke za novi termin treninga.' }}
+      </p>
+    </div>
+
+    <app-button-icon class="ml-auto" color="transparent" tooltip="Zatvori" (onClick)="close()">
+      <app-icon icon="close" class="size-5 stroke-current" />
+    </app-button-icon>
+  </div>
+
+  <div class="dialog-content grid gap-2 p-6 sm:grid-cols-2">
+    <div class="sm:col-span-2">
+      <app-text-input label="Naziv treninga" type="text" [field]="form.title" />
+    </div>
+
+    <app-date-input label="Datum treninga" [field]="form.date" />
+    <app-time-input label="Pocetak" [field]="form.startTime" />
+    <app-time-input label="Kraj" [field]="form.endTime" />
+    <app-text-input label="Kapacitet" type="number" [field]="form.capacity" />
+    @if (!isEdit) {
+      <app-text-input label="Trener" type="text" [field]="form.trainerName" />
+      <div class="sm:col-span-2">
+        <app-text-input label="Lokacija" type="text" [field]="form.location" />
+      </div>
+    }
+    <div class="sm:col-span-2">
+      <app-textarea-input label="Opis" [field]="form.description" />
+    </div>
+  </div>
+
+  <div class="dialog-footer">
+    <app-button (onClick)="close()">Odustani</app-button>
+    <app-button type="submit" color="primary">{{ isEdit ? 'Sacuvaj izmene' : 'Sacuvaj trening' }}</app-button>
+  </div>
+</form>

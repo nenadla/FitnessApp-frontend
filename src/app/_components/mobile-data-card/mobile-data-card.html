@@ -1,0 +1,41 @@
+<article class="overflow-hidden rounded-2xl border border-border bg-bg_primary shadow-sm">
+  <div class="flex items-start gap-3 border-b border-border/70 bg-bg_light px-4 py-3.5">
+    <div class="min-w-0 flex-1">
+      <h2 class="m-0 truncate text-base font-semibold text-text_primary">{{ title() }}</h2>
+      @if (subtitle()) {
+        <p class="mt-1 text-sm text-light">{{ subtitle() }}</p>
+      }
+    </div>
+
+    @if (status()) {
+      <span
+        class="shrink-0 rounded-full px-2 py-1 text-[0.6875rem] font-bold uppercase"
+        [class.bg-emerald-50]="statusTone() === 'success'"
+        [class.text-emerald-700]="statusTone() === 'success'"
+        [class.bg-red-50]="statusTone() === 'error'"
+        [class.text-red-600]="statusTone() === 'error'"
+        [class.bg-purple-100]="statusTone() === 'primary'"
+        [class.text-purple-700]="statusTone() === 'primary'"
+      >
+        {{ status() }}
+      </span>
+    }
+  </div>
+
+  @if (details().length) {
+    <dl class="grid grid-cols-2 gap-x-4 gap-y-3 px-4 py-4">
+      @for (detail of details(); track detail.label) {
+        <div class="min-w-0">
+          <dt class="text-xs font-medium text-light">{{ detail.label }}</dt>
+          <dd class="mt-0.5 truncate text-sm font-medium text-text_primary">{{ detail.value ?? '-' }}</dd>
+        </div>
+      }
+    </dl>
+  }
+
+  @if (showActions()) {
+    <div class="flex justify-end gap-1 border-t border-border/70 px-3 py-2">
+      <ng-content />
+    </div>
+  }
+</article>

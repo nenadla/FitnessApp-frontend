@@ -1,0 +1,79 @@
+
+
+.is-invalid{
+    border: var(--color-error) solid 1px;
+    color: var(--color-error);
+}
+
+.is-focus{
+    border: var(--color-primary) solid 1px;
+    color: var(--color-primary);
+}
+
+.is-disabled{
+    color: #999999;
+    background-color: white;
+    cursor: not-allowed;
+    border: 1px solid var(--color-border);
+}
+
+select:disabled{
+    color: #999999;
+    background-color: white;
+    cursor: not-allowed;
+}
+
+.invalid-feedback{
+    color: var(--color-error);
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    height: 14px;
+    padding-left: 4px;
+}
+
+
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper{
+    display: none;
+}
+
+:host ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before{
+    display: none;
+}
+:host ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::after{
+    display: none;
+}
+:host ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled){
+    background-color: transparent;
+}
+:host ::ng-deep .mat-mdc-select-placeholder{
+    background-color: transparent;
+}
+:host ::ng-deep .mdc-text-field{
+    padding-inline: 12px !important;
+}
+:host ::ng-deep .mat-mdc-select-placeholder{
+    font-size: 14px;
+    color: var(--color-secondary);
+    opacity: 0.75;
+}
+:host ::ng-deep  .mat-mdc-form-field-infix{
+    padding-top: 10px !important;
+    padding-bottom: 16px !important;
+}
+
+:host ::ng-deep .min-h-12 .mat-mdc-form-field-infix{
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+}
+:host ::ng-deep .rounded-ff .mat-mdc-form-field-infix{
+    min-height: 40px;
+    padding-top: 9px;
+    padding-bottom: 0px;
+}
+:host ::ng-deep .mat-mdc-select-value-text{
+    font-size: 14px;
+    color: var(--color-primary);
+}
+
+

@@ -1,0 +1,35 @@
+<main class="flex min-h-screen items-center justify-center bg-neutral-100 p-4">
+  <mat-card class="w-full max-w-xl p-6 sm:p-8">
+    <h1 class="m-0 text-3xl font-semibold">Kreiraj nalog</h1>
+    <p class="mt-2 text-neutral-600">Popuni podatke za registraciju u Retro Fitness.</p>
+
+    @if (successMessage()) {
+      <div class="mt-6 rounded-md border border-green-300 bg-green-50 p-4 text-green-800">
+        {{ successMessage() }}
+      </div>
+    } @else {
+      @if (errorMessage()) {
+        <div class="mt-6 rounded-md border border-red-300 bg-red-50 p-4 text-red-800">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form class="mt-6 grid gap-2" (submit)="submit($event)">
+        <div class="grid gap-2 sm:grid-cols-2">
+          <app-text-input label="Ime" type="text" autocomplete="given-name" [field]="form.firstName" />
+          <app-text-input label="Prezime" type="text" autocomplete="family-name" [field]="form.lastName" />
+        </div>
+
+        <app-text-input label="Email" type="email" autocomplete="email" [field]="form.email" />
+        <app-text-input label="Broj telefona" type="tel" autocomplete="tel" [field]="form.phoneNumber" />
+        <app-date-input label="Datum rodjenja" [field]="form.dateOfBirth" />
+        <app-text-input label="Lozinka" type="password" [field]="form.password" />
+        <app-text-input label="Potvrdi lozinku" type="password" [field]="form.confirmPassword" />
+
+        <app-button type="submit" color="primary" [loading]="isSubmitting()">
+          {{ isSubmitting() ? 'Registracija u toku...' : 'Registruj se' }}
+        </app-button>
+      </form>
+    }
+  </mat-card>
+</main>

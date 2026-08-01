@@ -1,0 +1,9 @@
+<div class="pl-6 pb-2 flex flex-col sm:w-[400px] min-h-[120px] rounded-xl border border-border bg-bg_light">
+    <div class="flex mt-2 mr-2">
+        <div class="text-[20px] mt-2 ml-4 text-primary font-semibold flex items-center">{{toast()?.title ?? ''}}</div>
+        <app-button-icon color="transparent" class="ml-auto" (click)="hide()">
+            <app-icon icon="close" class="stroke-primary size-6"/>
+        </app-button-icon>
+    </div>
+    <div class="ml-4 text-[14px] mr-[50px] text-text_primary text-wrap">{{toast()?.text ?? ''}}</div>
+</div>

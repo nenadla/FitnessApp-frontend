@@ -1,0 +1,54 @@
+<main id="landing-top" class="bg-bg_secondary text-text_primary">
+  <section class="relative isolate flex min-h-dvh overflow-hidden text-white">
+    <img class="absolute inset-0 -z-20 size-full object-cover object-[62%_center] sm:object-center" src="/assets/photos/retro-fitness-landing.png" alt="Retro Fitness grupni trening" />
+    <div class="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(17,19,42,.94)_0%,rgba(25,21,50,.77)_39%,rgba(25,21,50,.2)_72%,rgba(25,21,50,.4)_100%)]"></div>
+    <div class="absolute inset-x-0 bottom-0 -z-10 h-2/5 bg-[linear-gradient(0deg,rgba(17,19,42,.7),transparent)]"></div>
+
+    <div class="mx-auto flex w-full max-w-7xl flex-col px-4 py-4 sm:px-8 sm:py-6 lg:px-12">
+      <header class="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/10 px-3 py-2.5 shadow-xl shadow-black/10 backdrop-blur-md sm:px-5">
+        <img class="h-9 w-36 object-cover object-center sm:h-11 sm:w-44" src="/assets/photos/retro-fitness-logo.png" alt="Retro Fitness" />
+        <a href="#kako-funkcionise" class="hidden text-sm font-medium text-white/85 transition hover:text-white md:block">Kako funkcioniše?</a>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <app-button class="[&_.custom-button]:border-white [&_.custom-button]:bg-white [&_.custom-button]:text-primary hover:[&_.custom-button]:bg-white/90" color="transparent" (onClick)="navigate('login')">Prijava</app-button>
+          <app-button class="[&_.custom-button]:border-fuchsia-500 [&_.custom-button]:bg-fuchsia-600 [&_.custom-button]:text-white hover:[&_.custom-button]:bg-fuchsia-500" color="primary" (onClick)="navigate('register')">Registracija</app-button>
+        </div>
+      </header>
+
+      <div class="flex flex-1 items-center py-16 sm:py-24 lg:py-32">
+        <div class="max-w-2xl">
+          <p class="mb-5 inline-flex rounded-full border border-fuchsia-300/40 bg-fuchsia-500/20 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-fuchsia-100">Retro Fitness Studio</p>
+          <h1 class="max-w-xl text-4xl font-black leading-[1.03] tracking-tight text-white sm:text-6xl lg:text-7xl">Treniraj uz Saru, osećaj se bolje svakog dana.</h1>
+          <p class="mt-6 max-w-lg text-base leading-7 text-white/85 sm:text-lg">Rezerviši svoj termin, prati napredak i treniraj u atmosferi koja pokreće.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <app-button class="[&_.custom-button]:h-12 [&_.custom-button]:border-fuchsia-500 [&_.custom-button]:bg-fuchsia-600 [&_.custom-button]:px-6 [&_.custom-button]:text-white hover:[&_.custom-button]:bg-fuchsia-500" color="primary" (onClick)="navigate('register')">Registruj se</app-button>
+            <app-button class="[&_.custom-button]:h-12 [&_.custom-button]:border-white [&_.custom-button]:bg-white [&_.custom-button]:px-6 [&_.custom-button]:text-primary hover:[&_.custom-button]:bg-white/90" color="transparent" (onClick)="navigate('login')">Prijavi se</app-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kako-funkcionise" class="mx-auto max-w-6xl scroll-mt-4 px-4 py-12 sm:px-8 sm:py-16 lg:py-9">
+    <div class="mx-auto max-w-xl text-center"><p class="text-xs font-bold uppercase tracking-[0.18em] text-primary_h">Jednostavno i brzo</p><h2 class="mt-2 text-2xl font-bold sm:text-3xl">Kako funkcioniše?</h2><p class="mt-2 text-sm text-light">Od registracije do omiljenog treninga u nekoliko koraka.</p></div>
+    <div class="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <article class="rounded-2xl border border-purple-200 bg-purple-100/85 p-4"><span class="grid size-9 place-items-center rounded-xl bg-white text-purple-600 shadow-sm"><app-icon icon="user" class="size-5 stroke-current" /></span><h3 class="mt-3 text-sm font-semibold">1. Registruj se</h3><p class="mt-1 text-xs leading-5 text-light">Kreiraj nalog brzo i jednostavno.</p></article>
+      <article class="rounded-2xl border border-orange-200 bg-orange-100/85 p-4"><span class="grid size-9 place-items-center rounded-xl bg-white text-orange-500 shadow-sm"><app-icon icon="confirm" class="size-5 stroke-current" /></span><h3 class="mt-3 text-sm font-semibold">2. Sačekaj verifikaciju</h3><p class="mt-1 text-xs leading-5 text-light">Administrator potvrđuje tvoj nalog.</p></article>
+      <article class="rounded-2xl border border-emerald-200 bg-emerald-100/85 p-4"><span class="grid size-9 place-items-center rounded-xl bg-white text-emerald-600 shadow-sm"><app-icon icon="calendar-check" class="size-5 stroke-current" /></span><h3 class="mt-3 text-sm font-semibold">3. Rezerviši trening</h3><p class="mt-1 text-xs leading-5 text-light">Odaberi termin koji ti najviše odgovara.</p></article>
+      <article class="rounded-2xl border border-rose-200 bg-rose-100/85 p-4"><span class="grid size-9 place-items-center rounded-xl bg-white text-rose-500 shadow-sm"><app-icon icon="star" class="size-5 stroke-current" /></span><h3 class="mt-3 text-sm font-semibold">4. Prati svoj rezultat</h3><p class="mt-1 text-xs leading-5 text-light">Dolazi na treninge i ostvari svoje ciljeve.</p></article>
+    </div>
+  </section>
+
+  <section class="border-y border-border bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-12 sm:px-8 sm:py-16 lg:py-9">
+      <div class="mx-auto max-w-xl text-center"><p class="text-xs font-bold uppercase tracking-[0.18em] text-primary_h">Izaberi svoj ritam</p><h2 class="mt-2 text-2xl font-bold sm:text-3xl">Paketi i termini</h2><p class="mt-2 text-sm text-light">Fleksibilne opcije za svaki nivo treninga i raspored.</p></div>
+      <div class="mt-7 grid gap-4 lg:grid-cols-3">
+        <article class="flex flex-col rounded-2xl border border-purple-200 bg-[linear-gradient(145deg,#f1e7ff,#e2d1ff)] p-5"><h3 class="text-sm font-semibold">Paket 12 termina</h3><div class="mt-3 flex items-end gap-2"><span class="text-4xl font-black text-primary">12</span><span class="pb-1 text-xs text-light">termina</span></div><ul class="mt-4 grid gap-1.5 text-xs text-light"><li>Važi 1 mesec</li><li>Pogodno za redovne treninge</li><li>Najbolji odnos cene i termina</li></ul><app-button class="mt-5 [&_.custom-button]:h-9 [&_.custom-button]:w-full" color="primary" (onClick)="navigate('register')">Saznaj više</app-button></article>
+        <article class="flex flex-col rounded-2xl border border-emerald-200 bg-[linear-gradient(145deg,#e4f8ed,#ccefdc)] p-5"><h3 class="text-sm font-semibold">Paket 6 termina</h3><div class="mt-3 flex items-end gap-2"><span class="text-4xl font-black text-emerald-700">6</span><span class="pb-1 text-xs text-light">termina</span></div><ul class="mt-4 grid gap-1.5 text-xs text-light"><li>Važi 1 mesec</li><li>Besplatna promena termina</li><li>Fleksibilna opcija</li></ul><app-button class="mt-5 [&_.custom-button]:h-9 [&_.custom-button]:w-full [&_.custom-button]:border-emerald-600 [&_.custom-button]:bg-emerald-600" color="primary" (onClick)="navigate('register')">Saznaj više</app-button></article>
+        <article class="flex flex-col rounded-2xl border border-rose-200 bg-[linear-gradient(145deg,#ffe7ed,#ffd3df)] p-5"><h3 class="text-sm font-semibold">Pojedinačni termini</h3><div class="mt-3 flex items-end gap-2"><span class="text-4xl font-black text-rose-500">∞</span><span class="pb-1 text-xs text-light">po izboru</span></div><ul class="mt-4 grid gap-1.5 text-xs text-light"><li>Bez roka trajanja</li><li>Kupi onoliko koliko ti treba</li><li>Koristi kad želiš</li></ul><app-button class="mt-5 [&_.custom-button]:h-9 [&_.custom-button]:w-full [&_.custom-button]:border-rose-500 [&_.custom-button]:bg-rose-500" color="primary" (onClick)="navigate('register')">Saznaj više</app-button></article>
+      </div>
+    </div>
+  </section>
+
+  <footer class="mx-auto flex max-w-6xl items-center justify-between px-4 py-6 text-xs text-light sm:px-8"><span>Retro Fitness Studio</span><span>Powered by ШоЊа</span></footer>
+  <a href="#landing-top" class="fixed bottom-5 right-5 grid size-11 place-items-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 hover:bg-primary_h" aria-label="Vrati se na vrh"><app-icon icon="chevron-down" class="size-5 rotate-180 stroke-current" /></a>
+</main>

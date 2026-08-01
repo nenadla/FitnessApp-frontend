@@ -1,0 +1,48 @@
+<div class="flex flex-col">
+    <div class="flex flex-col relative">
+        <label
+            class="flex items-center w-fit bg-bg_primary rounded-md px-1 absolute left-2 -translate-y-1/2 top-1/2 text-sm text-primary_h"
+            [class.top-0!]="isFocused() || fieldValue()"
+            [class.text-xs!]="isFocused() || fieldValue()"
+            [class.text-text_secondary_h!]="isFocused()"
+            for="text-input-{{label().split(' ').join('-')}}"
+        >
+            {{label()}} <span class="text-error">{{ isRequired() ? '*' : '' }}</span>
+        </label>
+        <input
+            id="text-input-{{label().split(' ').join('-')}}"
+            [attr.type]="type() === 'password' ? (hide() ? 'password' : 'text') : type()"
+            class="w-full rounded-xl border-border border outline-none px-3 text-sm h-12 text-text_primary bg-bg_primary"
+            [class.is-invalid]="showErrors()"
+            [class.is-focus]="isFocused()"
+            (focus)="isFocused.set(true)"
+            (blur)="isFocused.set(false)"
+            [formField]="field()"
+            [placeholder]="isFocused() ? placeholder() : ''"
+            [autocomplete]="autocomplete()"
+        >
+        @if (type() === 'password') {
+            <app-icon
+                class="absolute right-4 top-1/2 -translate-y-1/2 size-5 min-w-5 stroke-secondary hover:stroke-primary cursor-pointer"
+                [icon]="hide() ? 'eye' : 'crosed-eye'"
+                (click)="togglePass($event)"
+            />
+        }
+
+        @if(fieldValue() && isEnabled() && enableClear()){
+            <app-icon
+                class="absolute right-4 top-1/2 -translate-y-1/2 size-5 min-w-5 stroke-secondary hover:stroke-primary cursor-pointer"
+                icon="close"
+                (click)="$event.stopPropagation(); clearValue()"
+            />
+        }
+    </div>
+
+    @if (showErrors()) {
+        <div class="invalid-feedback">{{ firstErrorMessage() }}</div>
+    }
+    @else{
+        <span class="h-3.5"></span>
+    }
+
+</div>

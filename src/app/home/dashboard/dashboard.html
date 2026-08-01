@@ -1,0 +1,6 @@
+@if (authService.currentUser(); as user) {
+  <section>
+    <h1 class="m-0 text-2xl font-semibold">{{ user.role === 'Admin' ? 'Admin dashboard' : 'Moj dashboard' }}</h1>
+    <p class="mt-2 text-neutral-600">Dobrodosao, {{ user.firstName }}.</p>
+  </section>
+}

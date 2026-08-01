@@ -1,0 +1,13 @@
+<form class="flex h-dvh w-screen flex-col bg-white sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:w-[40rem]" (submit)="submit($event)" cdkDrag cdkDragRootElement=".mat-mdc-dialog-container">
+  <div class="dialog-header cursor-grab" cdkDragHandle>
+    <div><h2 class="m-0 text-xl font-semibold text-neutral-900">Nova notifikacija</h2><p class="mt-1 text-sm text-neutral-500">Posalji obavestenje svim korisnicima.</p></div>
+    <app-button-icon class="ml-auto" color="transparent" tooltip="Zatvori" (onClick)="close()"><app-icon icon="close" class="size-5 stroke-current" /></app-button-icon>
+  </div>
+  <div class="dialog-content grid gap-2 p-6">
+    <app-text-input label="Naslov" type="text" [field]="form.title" />
+    <app-textarea-input label="Poruka" [field]="form.message" />
+    <app-select-input label="Tip" [options]="notificationTypeOptions" [values]="notificationTypes" [field]="form.type" />
+    <app-select-input label="Posalji i na email" [options]="emailOptions" [values]="emailValues" [field]="form.sendEmail" />
+  </div>
+  <div class="dialog-footer"><app-button (onClick)="close()">Odustani</app-button><app-button type="submit" color="primary">Posalji</app-button></div>
+</form>

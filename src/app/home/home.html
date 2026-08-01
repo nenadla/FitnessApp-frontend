@@ -1,0 +1,18 @@
+<div class="flex min-h-screen bg-neutral-100">
+  @if (isMobileNavigationOpen()) {
+    <button
+      type="button"
+      class="fixed inset-0 z-40 bg-slate-950/35 md:hidden"
+      aria-label="Zatvori navigaciju"
+      (click)="closeMobileNavigation()"
+    ></button>
+  }
+
+  <app-sidebar [mobileOpen]="isMobileNavigationOpen()" (mobileClose)="closeMobileNavigation()" />
+  <section class="min-w-0 flex-1">
+    <app-header (mobileMenuToggle)="toggleMobileNavigation()" />
+    <main class="p-4 sm:p-6">
+      <router-outlet />
+    </main>
+  </section>
+</div>

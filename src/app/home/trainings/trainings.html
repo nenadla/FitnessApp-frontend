@@ -1,0 +1,184 @@
+<section class="px-1 py-3 sm:p-6" aria-label="Tabela treninga">
+  <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <div>
+        <h1 class="m-0 text-2xl font-semibold text-neutral-900">Treninzi</h1>
+        <p class="mt-1 text-sm text-neutral-500">Pregled i upravljanje treninzima.</p>
+      </div>
+      @if (isAdmin()) {
+        <app-button class="sm:[&_.custom-button]:!hidden" color="primary" (onClick)="openAddTrainingDialog()">
+          <app-icon icon="add" class="size-4 stroke-current" />
+        </app-button>
+      }
+    </div>
+
+    <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-start">
+      <div class="w-full sm:w-80">
+        <app-text-input
+          label="Pretraga"
+          type="search"
+          placeholder="Naziv, trener ili lokacija"
+          [field]="searchForm.search"
+          (onChange)="applySearch($event)"
+        />
+      </div>
+
+      @if (isAdmin()) {
+        <app-button class="[&_.custom-button]:!hidden sm:[&_.custom-button]:!block [&_.custom-button]:!h-12" color="primary" (onClick)="openAddTrainingDialog()">
+          <app-icon icon="add" class="mr-1 size-4 stroke-current" />
+          Dodaj trening
+        </app-button>
+      }
+    </div>
+  </div>
+
+  @if (!isAdmin()) {
+    <div class="space-y-3">
+      @for (training of filteredTrainings(); track training.id) {
+        <app-training-card
+          [training]="training"
+          [isReserved]="isReservedByCurrentUser(training)"
+          [canReserve]="canReserveTraining(training)"
+          [isSubmitting]="reservationSubmittingId() === training.id"
+          (reserve)="confirmReservation(training)"
+          (cancel)="confirmReservationCancellation(training)"
+        />
+      } @empty {
+        <div class="rounded-2xl border border-border bg-bg_primary px-4 py-14 text-center text-sm text-light">Nema treninga za prikaz.</div>
+      }
+    </div>
+  }
+
+  @if (isAdmin()) {
+    <div class="space-y-3 md:hidden">
+      @for (training of filteredTrainings(); track training.id) {
+        <app-mobile-data-card
+          [title]="training.title"
+          [subtitle]="getDayOfWeek(training.startTime) + ' ' + (training.startTime | date: 'dd.MM.yyyy.')"
+          [status]="training.isCancelled ? 'Otkazan' : 'Aktivan'"
+          [statusTone]="training.isCancelled ? 'error' : 'success'"
+          [details]="trainingDetails(training)"
+        >
+          <app-button-icon color="transparent" size="small" tooltip="Izmeni trening" (onClick)="openEditTrainingDialog(training)">
+            <app-icon icon="edit" class="size-4 stroke-current" />
+          </app-button-icon>
+          <app-button-icon color="transparent" size="small" tooltip="Obrisi trening" (onClick)="confirmDeleteTraining(training)">
+            <app-icon icon="delete" class="size-4 fill-red-500" />
+          </app-button-icon>
+        </app-mobile-data-card>
+      } @empty {
+        <div class="rounded-2xl border border-border bg-bg_primary px-4 py-14 text-center text-sm text-light">Nema treninga za prikaz.</div>
+      }
+    </div>
+
+    <div class="retro-table-wrap relative hidden md:block">
+    @if (isLoading()) {
+      <div class="absolute inset-x-0 bottom-14 top-12 z-10 grid min-h-56 place-items-center bg-white/75">
+        <div class="size-8 animate-spin rounded-full border-[3px] border-primary border-t-transparent"></div>
+      </div>
+    }
+
+    <table mat-table [dataSource]="dataSource" matSort class="retro-table">
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
+        <td mat-cell *matCellDef="let training">
+          {{ getDayOfWeek(training.startTime) }} {{ training.startTime | date: 'dd.MM.yyyy.' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Vreme</th>
+        <td mat-cell *matCellDef="let training">
+          {{ training.startTime | date: 'HH:mm' }} - {{ training.endTime | date: 'HH:mm' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Naziv treninga</th>
+        <td mat-cell *matCellDef="let training" class="font-medium">{{ training.title }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="trainerName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Trener</th>
+        <td mat-cell *matCellDef="let training">{{ training.trainerName || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="capacity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Kapacitet</th>
+        <td mat-cell *matCellDef="let training">{{ training.capacity }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="reservedCount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Prijavljeno</th>
+        <td mat-cell *matCellDef="let training">
+          @if (isAdmin()) {
+            <button
+              type="button"
+              class="font-medium text-primary hover:text-primary_h hover:underline"
+              (click)="openTrainingReservationsDialog(training)"
+            >
+              {{ training.reservedCount }}
+            </button>
+          } @else {
+            {{ training.reservedCount }}
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let training">
+          <span class="retro-table-status" [class.retro-table-status-cancelled]="training.isCancelled">
+            {{ training.isCancelled ? 'Otkazan' : 'Aktivan' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Akcije</th>
+        <td mat-cell *matCellDef="let training" class="retro-table-actions">
+          <div class="flex justify-center gap-1">
+            @if (isAdmin()) {
+              <app-button-icon color="transparent" size="small" tooltip="Izmeni trening" (onClick)="openEditTrainingDialog(training)">
+                <app-icon icon="edit" class="size-4 stroke-current" />
+              </app-button-icon>
+              <app-button-icon color="transparent" size="small" tooltip="Obrisi trening" (onClick)="confirmDeleteTraining(training)">
+                <app-icon icon="delete" class="size-4 fill-red-500" />
+              </app-button-icon>
+            } @else {
+              <app-button-icon
+                color="transparent"
+                size="small"
+                [tooltip]="reservationTooltip(training)"
+                [disabled]="isReservedByCurrentUser(training) || !canReserveTraining(training)"
+                (onClick)="confirmReservation(training)"
+              >
+                <app-icon icon="edit" class="size-4 stroke-current" />
+              </app-button-icon>
+              <app-button-icon
+                color="transparent"
+                size="small"
+                tooltip="Otkazi rezervaciju"
+                [disabled]="!isReservedByCurrentUser(training)"
+                (onClick)="confirmReservationCancellation(training)"
+              >
+                <app-icon icon="delete" class="size-4 fill-red-500" />
+              </app-button-icon>
+            }
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-mdc-row" *matNoDataRow>
+        <td class="mat-mdc-cell retro-table-empty" [attr.colspan]="displayedColumns.length">
+          Nema treninga za prikaz.
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+    </div>
+  }
+</section>

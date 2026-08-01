@@ -1,0 +1,20 @@
+<div class="flex flex-col w-screen sm:w-[500px] md:w-[540px] h-dvh sm:h-[300px] bg-bg_primary border border-border relative" cdkDragRootElement=".mat-mdc-dialog-container" cdkDrag>
+    <div class="dialog-header cursor-grab" cdkDragHandle>
+        <div class="text-2xl font-medium text-primary content-center">Da li ste sigurni?</div>
+    </div>
+
+    @if(data){
+        <div class="flex p-4 sm:p-8">{{ data }}</div>
+    }
+    @else {
+        <div class="flex p-4 sm:p-8">
+            Da li zelis da nastavis sa ovom akcijom?
+        </div>
+    }
+    
+
+    <div class="dialog-footer">
+        <app-button (onClick)="dialogRef.close(false)">Odustani</app-button>
+        <app-button color="primary" (onClick)="dialogRef.close(true)">Potvrdi</app-button>
+    </div>
+</div>

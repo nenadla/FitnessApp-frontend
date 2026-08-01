@@ -1,0 +1,39 @@
+<div
+  class="flex h-dvh w-screen flex-col bg-white sm:h-auto sm:min-h-72 sm:max-h-[calc(100dvh-2rem)] sm:w-[32rem]"
+  cdkDrag
+  cdkDragRootElement=".mat-mdc-dialog-container"
+>
+  <div class="dialog-header cursor-grab" cdkDragHandle>
+    <div>
+      <h2 class="m-0 text-xl font-semibold text-primary">Status korisnika</h2>
+      <p class="mt-1 text-sm text-neutral-500">{{ data.user.fullName }}</p>
+    </div>
+
+    <app-button-icon class="ml-auto" color="transparent" tooltip="Zatvori" (onClick)="close()">
+      <app-icon icon="close" class="size-5 stroke-current" />
+    </app-button-icon>
+  </div>
+
+  <div class="dialog-content p-6 text-neutral-700">
+    @if (data.user.userStatus === UserStatus.Unverified) {
+      <p>Korisnik jos nije verifikovan. Mozete ga verifikovati ili blokirati.</p>
+    } @else if (data.user.userStatus === UserStatus.Verified) {
+      <p>Korisnik je verifikovan. Mozete blokirati njegov pristup aplikaciji.</p>
+    } @else {
+      <p>Korisnik je blokiran. Mozete mu ponovo odobriti pristup aplikaciji.</p>
+    }
+  </div>
+
+  <div class="dialog-footer">
+    <app-button (onClick)="close()">Odustani</app-button>
+
+    @if (data.user.userStatus === UserStatus.Unverified) {
+      <app-button color="light" (onClick)="selectAction('block')">Blokiraj</app-button>
+      <app-button color="primary" (onClick)="selectAction('verify')">Verifikuj</app-button>
+    } @else if (data.user.userStatus === UserStatus.Verified) {
+      <app-button color="primary" (onClick)="selectAction('block')">Blokiraj</app-button>
+    } @else {
+      <app-button color="primary" (onClick)="selectAction('unblock')">Odblokiraj</app-button>
+    }
+  </div>
+</div>

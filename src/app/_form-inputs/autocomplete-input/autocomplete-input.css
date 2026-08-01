@@ -1,0 +1,62 @@
+
+input::placeholder {
+    font-size: 14px;
+}
+
+.autocomplete-wrapper:hover{
+    border: 1px solid var(--color-primary);
+}
+
+.autocomplete-wrapper.is-invalid{
+    border: var(--color-error) solid 1px;
+    color: var(--color-error) ;
+}
+.autocomplete-wrapper.is-focus{
+    border: #008BFF solid 1px;
+    color: var(--color-primary);
+}
+
+.autocomplete-wrapper.is-disabled{
+    background-color: var(--color-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.autocomplete-wrapper input:disabled{
+    background-color: var(--color-disabled);
+    cursor: not-allowed;
+}
+
+.invalid-feedback{
+    color: var(--color-error) ;
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    height: 14px;
+    padding-left: 4px;
+}
+
+::ng-deep .table-option .mdc-list-item__primary-text {
+    width: 100%;
+}
+
+::ng-deep .table-option {
+    padding: 0 !important;
+    border-bottom: 1px solid var(--color-border);
+}
+
+::ng-deep .table-header {
+    padding: 0 !important;
+    border-bottom: 1px solid var(--color-border);
+    position: sticky !important;
+    top: 0;
+    z-index: 1;
+    background: var(--color-bg_secondary) !important;
+}
+
+::ng-deep .table-header .mdc-list-item__primary-text {
+    width: 100%;
+    opacity: 1 !important;
+}
+
+

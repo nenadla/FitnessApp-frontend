@@ -1,0 +1,26 @@
+<button
+    matTooltipShowDelay="300" 
+    [matTooltip] = "tooltip()"
+    class="custom-button"
+    [disabled]="disabled()"
+    matRipple 
+    [matRippleCentered]="true"
+    (click)="handleClick($event)"
+    [class]="{
+        'primary': color() === 'primary',
+        'transparent': color() === 'transparent',
+        'transparent-blue': color() === 'transparent-blue',
+        'white': color() === 'white',
+        'small': size() === 'small',
+        'large': size() === 'large',
+        'active': active(),
+    }"
+    [type]="type()"
+>
+    @if (loading()) {
+        <div class="spinner size-6 border-[3px]!" [class]="loaderClass()"></div>
+    }
+    @else{
+        <ng-content/>
+    }
+</button>

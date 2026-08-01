@@ -1,0 +1,15 @@
+<main class="flex min-h-screen items-center justify-center bg-neutral-100 p-4">
+  <mat-card class="w-full max-w-md p-6 sm:p-8">
+    <h1 class="m-0 text-3xl font-semibold">Prijavi se</h1>
+    <p class="mt-2 text-neutral-600">Pristup je dostupan samo verifikovanim korisnicima.</p>
+
+    <form class="mt-6 grid gap-2" (submit)="submit($event)">
+      <app-text-input label="Email" type="email" autocomplete="email" [field]="form.email" />
+      <app-text-input label="Lozinka" type="password" autocomplete="current-password" [field]="form.password" />
+
+      <app-button type="submit" color="primary" [loading]="isSubmitting()">
+        {{ isSubmitting() ? 'Prijava u toku...' : 'Prijavi se' }}
+      </app-button>
+    </form>
+  </mat-card>
+</main>

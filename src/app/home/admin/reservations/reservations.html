@@ -1,0 +1,17 @@
+<section class="px-1 py-3 sm:p-6">
+  <div class="mb-6"><h1 class="m-0 text-2xl font-semibold text-neutral-900">Rezervacije</h1><p class="mt-1 text-sm text-neutral-500">Pregled rezervacija korisnika.</p></div>
+  <div class="retro-table-wrap relative">
+    @if (isLoading()) { <div class="absolute inset-x-0 bottom-14 top-12 z-10 grid min-h-56 place-items-center bg-white/75"><div class="size-8 animate-spin rounded-full border-[3px] border-primary border-t-transparent"></div></div> }
+    <table mat-table [dataSource]="dataSource" matSort class="retro-table">
+      <ng-container matColumnDef="user"><th mat-header-cell *matHeaderCellDef mat-sort-header>Korisnik</th><td mat-cell *matCellDef="let reservation"><div class="font-medium">{{ reservation.userFullName }}</div><div class="text-xs text-neutral-500">{{ reservation.userEmail }}</div></td></ng-container>
+      <ng-container matColumnDef="training"><th mat-header-cell *matHeaderCellDef mat-sort-header>Trening</th><td mat-cell *matCellDef="let reservation" class="font-medium">{{ reservation.trainingTitle }}</td></ng-container>
+      <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th><td mat-cell *matCellDef="let reservation">{{ reservation.trainingStartTime | date: 'dd.MM.yyyy.' }}</td></ng-container>
+      <ng-container matColumnDef="time"><th mat-header-cell *matHeaderCellDef mat-sort-header>Vreme</th><td mat-cell *matCellDef="let reservation">{{ reservation.trainingStartTime | date: 'HH:mm' }} - {{ reservation.trainingEndTime | date: 'HH:mm' }}</td></ng-container>
+      <ng-container matColumnDef="trainer"><th mat-header-cell *matHeaderCellDef mat-sort-header>Trener</th><td mat-cell *matCellDef="let reservation">{{ reservation.trainerName || '-' }}</td></ng-container>
+      <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th><td mat-cell *matCellDef="let reservation"><span class="retro-table-status">{{ getStatusLabel(reservation.status) }}</span></td></ng-container>
+      <ng-container matColumnDef="reservedAt"><th mat-header-cell *matHeaderCellDef mat-sort-header>Rezervisano</th><td mat-cell *matCellDef="let reservation">{{ reservation.reservedAt | date: 'dd.MM.yyyy. HH:mm' }}</td></ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr><tr mat-row *matRowDef="let row; columns: displayedColumns"></tr><tr class="mat-mdc-row" *matNoDataRow><td class="mat-mdc-cell retro-table-empty" [attr.colspan]="displayedColumns.length">Nema rezervacija za prikaz.</td></tr>
+    </table>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+  </div>
+</section>

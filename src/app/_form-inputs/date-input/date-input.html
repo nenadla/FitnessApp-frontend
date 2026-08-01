@@ -1,0 +1,45 @@
+<div class="flex flex-col">
+    <div class="flex flex-col relative">
+        <label
+            class="flex items-center w-fit bg-bg_primary rounded-md px-1 absolute left-2 -translate-y-1/2 top-1/2 text-sm text-primary_h"
+            [class.top-0!]="picker.opened || fieldValue()"
+            [class.text-xs!]="picker.opened || fieldValue()"
+            [class.text-text_secondary_h!]="picker.opened"
+        >
+            {{label()}} <span class="text-error">{{ isRequired() ? '*' : '' }}</span>
+        </label>
+        <mat-form-field
+            class="w-full rounded-xl overflow-hidden border-border border outline-none text-sm h-12 hover:border-primary"
+            [class.is-invalid]="showErrors()"
+            [class.is-focus]="picker.opened"
+        >
+            <input
+              class="text-sm! text-text_primary!"
+              matInput
+              [matDatepicker]="picker"
+              [placeholder]="picker.opened ? 'Select date' : ''"
+              [formField]="field()"
+              [min]="min()"
+              [max]="max()"
+            >
+            <mat-datepicker-toggle matIconSuffix [for]="picker" />
+            <mat-datepicker #picker />
+        </mat-form-field>
+
+        @if(fieldValue() && isEnabled()){
+            <app-icon
+                class="absolute right-12 top-1/2 -translate-y-1/2 size-5 min-w-5 stroke-secondary hover:stroke-primary cursor-pointer"
+                icon="close"
+                (click)="$event.stopPropagation(); clearValue()"
+            />
+        }
+    </div>
+
+    @if (showErrors()) {
+        <div class="invalid-feedback">{{ firstErrorMessage() }}</div>
+    }
+    @else {
+        <span class="h-3.5"></span>
+    }
+
+</div>

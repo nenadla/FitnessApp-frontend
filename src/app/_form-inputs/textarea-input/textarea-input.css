@@ -1,0 +1,32 @@
+
+textarea::placeholder {
+    font-size: 14px;
+}
+textarea:hover{
+    border: 1px solid var(--color-primary);
+}
+
+textarea.is-invalid{
+    border: var(--color-error) solid 1px;
+    color: var(--color-error) ;
+}
+textarea.is-focus{
+    border: #008BFF solid 1px;
+    color: var(--color-primary);
+}
+
+textarea:disabled{
+    background-color: var(--color-disabled);
+    cursor: not-allowed;
+}
+
+
+.invalid-feedback{
+    color: var(--color-error) ;
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    height: 14px;
+    padding-left: 4px;
+}
+

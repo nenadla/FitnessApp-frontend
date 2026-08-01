@@ -1,0 +1,26 @@
+
+input::placeholder {
+    font-size: 14px;
+}
+
+.is-focus{
+    border: #008BFF solid 1px;
+    color: var(--color-primary);
+}
+
+:host ::ng-deep .mat-date-range-input{
+    align-content: center !important;
+}
+
+:host ::ng-deep .mat-date-range-input-container{
+    gap:12px !important;
+}
+
+:host ::ng-deep .mat-date-range-input-wrapper{
+    overflow: visible !important;
+}
+
+:host ::ng-deep .mat-date-range-input-inner{
+    width: auto !important;
+}
+

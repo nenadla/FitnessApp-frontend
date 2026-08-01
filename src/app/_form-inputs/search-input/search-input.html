@@ -1,0 +1,21 @@
+<div class="flex flex-col relative">
+    <input
+        type="text"
+        class="w-full rounded-xl border-[#012F5514] border pl-9 pr-3 outline-none text-sm h-10 text-text_primary panel-bg"
+        placeholder={{placeholder()}}
+        [class.is-focus]="isFocused()"
+        [class.is-selected]="fieldValue()"
+        (focus)="isFocused.set(true)"
+        (blur)="isFocused.set(false)"
+        [formField]="field()"
+    >
+    <app-icon class="absolute left-2 top-1/2 -translate-y-1/2 size-5" icon="search" [class]="fieldValue() ? 'stroke-text_secondary_h' : 'stroke-secondary'" />
+
+    @if(fieldValue() && isEnabled()){
+        <app-icon
+            class="absolute right-4 top-1/2 -translate-y-1/2 size-5 min-w-5 stroke-secondary hover:stroke-primary cursor-pointer"
+            icon="close"
+            (click)="$event.stopPropagation(); clearValue()"
+        />
+    }
+</div>
