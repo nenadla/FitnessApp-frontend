@@ -1,33 +1,32 @@
 <section class="px-1 py-3 sm:p-6" aria-label="Tabela treninga">
-  <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
-    <div class="flex items-center gap-2">
-      <div>
-        <h1 class="m-0 text-2xl font-semibold text-neutral-900">Treninzi</h1>
-        <p class="mt-1 text-sm text-neutral-500">Pregled i upravljanje treninzima.</p>
-      </div>
-      @if (isAdmin()) {
-        <app-button class="sm:[&_.custom-button]:!hidden" color="primary" (onClick)="openAddTrainingDialog()">
-          <app-icon icon="add" class="size-4 stroke-current" />
-        </app-button>
-      }
+  <div class="mb-6">
+    <div class="mb-4">
+      <h1 class="m-0 text-2xl font-semibold text-neutral-900">Treninzi</h1>
+      <p class="mt-1 text-sm text-neutral-500">Pregled i upravljanje treninzima.</p>
     </div>
 
-    <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-start">
-      <div class="w-full sm:w-80">
+    <div class="flex w-full flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <div class="w-full lg:w-[28rem]">
         <app-text-input
           label="Pretraga"
           type="search"
-          placeholder="Naziv, trener ili lokacija"
+          placeholder="Datum, naziv ili trener"
           [field]="searchForm.search"
           (onChange)="applySearch($event)"
         />
       </div>
 
       @if (isAdmin()) {
-        <app-button class="[&_.custom-button]:!hidden sm:[&_.custom-button]:!block [&_.custom-button]:!h-12" color="primary" (onClick)="openAddTrainingDialog()">
-          <app-icon icon="add" class="mr-1 size-4 stroke-current" />
-          Dodaj trening
-        </app-button>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <mat-checkbox [checked]="activeOnly()" (change)="changeActiveOnly($event.checked)">
+            Aktivni treninzi
+          </mat-checkbox>
+
+          <app-button class="[&_.custom-button]:!hidden sm:[&_.custom-button]:!block [&_.custom-button]:!h-12" color="primary" (onClick)="openAddTrainingDialog()">
+            <app-icon icon="add" class="mr-1 size-4 stroke-current" />
+            Dodaj trening
+          </app-button>
+        </div>
       }
     </div>
   </div>
@@ -37,11 +36,9 @@
       @for (training of filteredTrainings(); track training.id) {
         <app-training-card
           [training]="training"
-          [isReserved]="isReservedByCurrentUser(training)"
           [canReserve]="canReserveTraining(training)"
           [isSubmitting]="reservationSubmittingId() === training.id"
           (reserve)="confirmReservation(training)"
-          (cancel)="confirmReservationCancellation(training)"
         />
       } @empty {
         <div class="rounded-2xl border border-border bg-bg_primary px-4 py-14 text-center text-sm text-light">Nema treninga za prikaz.</div>
@@ -150,19 +147,10 @@
                 color="transparent"
                 size="small"
                 [tooltip]="reservationTooltip(training)"
-                [disabled]="isReservedByCurrentUser(training) || !canReserveTraining(training)"
+                [disabled]="!canReserveTraining(training)"
                 (onClick)="confirmReservation(training)"
               >
                 <app-icon icon="edit" class="size-4 stroke-current" />
-              </app-button-icon>
-              <app-button-icon
-                color="transparent"
-                size="small"
-                tooltip="Otkazi rezervaciju"
-                [disabled]="!isReservedByCurrentUser(training)"
-                (onClick)="confirmReservationCancellation(training)"
-              >
-                <app-icon icon="delete" class="size-4 fill-red-500" />
               </app-button-icon>
             }
           </div>

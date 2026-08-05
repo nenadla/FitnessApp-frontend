@@ -10,11 +10,11 @@ import { Button } from '../../../../_components/button/button';
 import { ButtonIcon } from '../../../../_components/button-icon/button-icon';
 import { Icon } from '../../../../_components/icon/icon';
 import { DateInput } from '../../../../_form-inputs/date-input/date-input';
-import { PurchaseTypeLabels } from '../../../../_shared/constants';
 import { handle } from '../../../../_shared/http-handler';
 import {
   CreatePaymentFormModel,
   CreatePaymentRequest,
+  AvailablePackageResponse,
   PaymentDialogData,
   PaymentDialogResult,
   PurchaseType,
@@ -22,6 +22,8 @@ import {
   UserListResponse,
 } from '../../../../_shared/types';
 import { UsersService } from '../../../../_services/users.service';
+import { SharedService } from '../../../../_services/shared.service';
+import { BalancesService } from '../../../../_services/balances.service';
 
 @Component({
   selector: 'app-add-payment-dialog',
@@ -43,12 +45,23 @@ import { UsersService } from '../../../../_services/users.service';
 export class AddPaymentDialog implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<AddPaymentDialog, PaymentDialogResult>);
   private readonly usersService = inject(UsersService);
+  private readonly sharedService = inject(SharedService);
+  private readonly balancesService = inject(BalancesService);
   private readonly data = inject<PaymentDialogData>(MAT_DIALOG_DATA);
 
   protected readonly isEdit = this.data.mode === 'edit';
   protected readonly PurchaseType = PurchaseType;
-  protected readonly purchaseTypeLabels = PurchaseTypeLabels;
-  protected readonly purchaseTypes = [PurchaseType.Package12, PurchaseType.Package6, PurchaseType.SingleSessions];
+  protected readonly availablePackages = signal<AvailablePackageResponse[]>([]);
+  protected readonly isPackagesLoading = signal(false);
+  protected readonly paymentTypeOptions = computed(() => [
+    ...this.availablePackages().map((item) => `Paket ${item.numberOfSessions} termina`),
+    'Pojedinacni termini',
+  ]);
+  protected readonly paymentTypeValues = computed(() => [
+    ...this.availablePackages().map((item) => item.purchaseType),
+    PurchaseType.SingleSessions,
+  ]);
+  protected readonly isSingleSessions = computed(() => this.model().paymentType === PurchaseType.SingleSessions);
   protected readonly users = signal<UserListResponse[]>([]);
   protected readonly isUsersLoading = signal(false);
   protected readonly userLabels = computed(() => this.users().map((user) => this.userLabel(user)));
@@ -57,7 +70,7 @@ export class AddPaymentDialog implements OnInit {
     userSearch: '',
     amount: 0,
     paymentType: PurchaseType.Package12,
-    numberOfSessions: 12,
+    numberOfSessions: null,
     note: null,
     startDate: new Date(),
   });
@@ -65,13 +78,9 @@ export class AddPaymentDialog implements OnInit {
     required(path.userId, { message: 'Korisnik je obavezan.' });
     required(path.amount, { message: 'Iznos je obavezan.' });
     required(path.paymentType, { message: 'Tip uplate je obavezan.' });
-    required(path.numberOfSessions, { message: 'Broj termina je obavezan.' });
-    if (!this.isEdit) {
-      required(path.startDate, { message: 'Start date je obavezan.' });
-    }
     disabled(path.userSearch, () => this.isEdit);
     disabled(path.paymentType, () => this.isEdit);
-    disabled(path.numberOfSessions, ({ valueOf }) => this.isEdit || valueOf(path.paymentType) !== PurchaseType.SingleSessions);
+    disabled(path.numberOfSessions, () => this.isEdit);
   });
 
   ngOnInit(): void {
@@ -84,12 +93,13 @@ export class AddPaymentDialog implements OnInit {
         paymentType: payment.paymentType,
         numberOfSessions: payment.numberOfSessions,
         note: payment.note || null,
-        startDate: null,
+        startDate: payment.startDate ? new Date(payment.startDate) : null,
       });
       return;
     }
 
     this.loadUsers();
+    this.loadPackages();
   }
 
   protected selectUser(label: string): void {
@@ -98,10 +108,12 @@ export class AddPaymentDialog implements OnInit {
   }
 
   protected changePaymentType(paymentType: PurchaseType): void {
-    const numberOfSessions =
-      paymentType === PurchaseType.Package12 ? 12 : paymentType === PurchaseType.Package6 ? 6 : 1;
-
-    this.model.update((value) => ({ ...value, paymentType, numberOfSessions }));
+    this.model.update((value) => ({
+      ...value,
+      paymentType,
+      numberOfSessions: paymentType === PurchaseType.SingleSessions ? 1 : null,
+      startDate: value.startDate ?? new Date(),
+    }));
   }
 
   protected close(): void {
@@ -119,10 +131,26 @@ export class AddPaymentDialog implements OnInit {
     const value = this.model();
     const paymentDate = this.isEdit ? this.data.payment!.paymentDate : new Date().toISOString();
 
+    if (!this.isEdit && this.isSingleSessions() && (!value.numberOfSessions || Number(value.numberOfSessions) <= 0)) {
+      this.sharedService.toast.set({ show: true, title: 'Neispravan unos', text: 'Broj termina mora biti veci od nule.', type: 'error' });
+      return;
+    }
+
+    if (!value.startDate) {
+      this.sharedService.toast.set({ show: true, title: 'Neispravan unos', text: 'Datum pocetka je obavezan.', type: 'error' });
+      return;
+    }
+
+    if (!this.isEdit && !this.isSingleSessions() && !this.availablePackages().some((item) => item.purchaseType === value.paymentType)) {
+      this.sharedService.toast.set({ show: true, title: 'Paketi nisu dostupni', text: 'Sacekaj da se ucitaju dostupni paketi pa pokusaj ponovo.', type: 'error' });
+      return;
+    }
+
     if (this.isEdit) {
       const request: UpdatePaymentRequest = {
         amount: Number(value.amount),
         paymentDate,
+        startDate: value.startDate?.toISOString() ?? null,
         note: value.note?.trim() || null,
       };
 
@@ -135,7 +163,7 @@ export class AddPaymentDialog implements OnInit {
       amount: Number(value.amount),
       paymentDate,
       paymentType: value.paymentType,
-      numberOfSessions: Number(value.numberOfSessions),
+      numberOfSessions: this.isSingleSessions() ? Number(value.numberOfSessions) : null,
       note: value.note?.trim() || null,
       startDate: value.startDate!.toISOString(),
     };
@@ -147,6 +175,19 @@ export class AddPaymentDialog implements OnInit {
     this.usersService
       .getAll()
       .pipe(handle((response) => this.users.set(response.data.items), (loading) => this.isUsersLoading.set(loading)))
+      .subscribe();
+  }
+
+  private loadPackages(): void {
+    this.balancesService
+      .getAvailablePackages()
+      .pipe(handle((response) => {
+        this.availablePackages.set(response.data);
+
+        if (!response.data.some((item) => item.purchaseType === this.model().paymentType)) {
+          this.changePaymentType(PurchaseType.SingleSessions);
+        }
+      }, (loading) => this.isPackagesLoading.set(loading)))
       .subscribe();
   }
 

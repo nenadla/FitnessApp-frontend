@@ -27,6 +27,10 @@ export class TrainingsService {
       params = params.set('isCancelled', request.isCancelled);
     }
 
+    if (request.activeOnly !== undefined) {
+      params = params.set('activeOnly', request.activeOnly);
+    }
+
     return this.http.get<ApiResponse<TrainingCalendarResponse[]>>(this.trainingsUrl, { params });
   }
 

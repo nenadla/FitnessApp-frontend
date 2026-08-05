@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, computed, in
 import { DatePipe } from '@angular/common';
 import { form } from '@angular/forms/signals';
 import { MatDialog } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -13,8 +14,7 @@ import { Icon } from '../../_components/icon/icon';
 import { TextInputComponent } from '../../_form-inputs/text-input/text-input';
 import { handle } from '../../_shared/http-handler';
 import { formatDateToStringWithDots, getDayOfWeek } from '../../_shared/methods';
-import { ReservationResponse, ReservationStatus, TrainingCalendarResponse, TrainingDialogData, TrainingDialogResult, TrainingSearchFormModel } from '../../_shared/types';
-import { DashboardService } from '../../_services/dashboard.service';
+import { TrainingCalendarResponse, TrainingDialogData, TrainingDialogResult, TrainingSearchFormModel } from '../../_shared/types';
 import { TrainingsService } from '../../_services/trainings.service';
 import { ReservationsService } from '../../_services/reservations.service';
 import { SharedService } from '../../_services/shared.service';
@@ -26,19 +26,30 @@ import { TrainingCard } from './training-card/training-card';
 
 @Component({
   selector: 'app-trainings',
-  imports: [Button, ButtonIcon, DatePipe, Icon, MatPaginatorModule, MatSortModule, MatTableModule, MobileDataCard, TextInputComponent, TrainingCard],
+  imports: [
+    Button,
+    ButtonIcon,
+    DatePipe,
+    Icon,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+    MobileDataCard,
+    TextInputComponent,
+    TrainingCard,
+  ],
   templateUrl: './trainings.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainingsComponent implements AfterViewInit, OnInit {
   private readonly trainingsService = inject(TrainingsService);
   private readonly reservationsService = inject(ReservationsService);
-  private readonly dashboardService = inject(DashboardService);
   private readonly sharedService = inject(SharedService);
   private readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
-  private readonly paginator = viewChild.required(MatPaginator);
-  private readonly sort = viewChild.required(MatSort);
+  private readonly paginator = viewChild(MatPaginator);
+  private readonly sort = viewChild(MatSort);
 
   protected readonly displayedColumns = [
     'date',
@@ -59,6 +70,7 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   protected readonly searchModel = signal<TrainingSearchFormModel>({ search: '' });
   protected readonly searchForm = form(this.searchModel);
   protected readonly searchTerm = signal('');
+  protected readonly activeOnly = signal(true);
   protected readonly filteredTrainings = computed(() => {
     const filter = this.searchTerm();
 
@@ -68,11 +80,10 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
 
     return this.trainings().filter((training) => this.matchesSearch(training, filter));
   });
-  private readonly currentUserReservations = signal<ReservationResponse[]>([]);
 
   constructor() {
     this.dataSource.filterPredicate = (training, filter) => {
-      const searchableValue = `${training.title} ${training.trainerName} ${training.location}`.toLowerCase();
+      const searchableValue = this.getSearchableTrainingText(training);
       return searchableValue.includes(filter);
     };
   }
@@ -81,15 +92,19 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
     this.sharedService.setTitle(Titles.Trainings);
     this.sharedService.page.set(Pages.Trainings);
     this.loadTrainings();
-
-    if (!this.isAdmin()) {
-      this.loadCurrentUserReservations();
-    }
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator();
-    this.dataSource.sort = this.sort();
+    const paginator = this.paginator();
+    const sort = this.sort();
+
+    if (paginator) {
+      this.dataSource.paginator = paginator;
+    }
+
+    if (sort) {
+      this.dataSource.sort = sort;
+    }
   }
 
   protected applySearch(value: string): void {
@@ -97,6 +112,11 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
     this.searchTerm.set(filter);
     this.dataSource.filter = filter;
     this.dataSource.paginator?.firstPage();
+  }
+
+  protected changeActiveOnly(checked: boolean): void {
+    this.activeOnly.set(checked);
+    this.loadTrainings();
   }
 
   protected openAddTrainingDialog(): void {
@@ -120,7 +140,7 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   }
 
   protected confirmReservation(training: TrainingCalendarResponse): void {
-    if (!this.canReserveTraining(training) || this.isReservedByCurrentUser(training)) {
+    if (!this.canReserveTraining(training)) {
       return;
     }
 
@@ -147,10 +167,6 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   }
 
   protected reservationTooltip(training: TrainingCalendarResponse): string {
-    if (this.isReservedByCurrentUser(training)) {
-      return 'Vec si prijavljen na trening';
-    }
-
     if (training.isCancelled) {
       return 'Trening je otkazan';
     }
@@ -164,35 +180,6 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
       { label: 'Trener', value: training.trainerName || '-' },
       { label: 'Kapacitet', value: `${training.reservedCount}/${training.capacity}` },
     ];
-  }
-
-  protected isReservedByCurrentUser(training: TrainingCalendarResponse): boolean {
-    return this.getCurrentUserReservation(training) !== undefined;
-  }
-
-  protected confirmReservationCancellation(training: TrainingCalendarResponse): void {
-    const reservation = this.getCurrentUserReservation(training);
-
-    if (!reservation) {
-      return;
-    }
-
-    this.dialog
-      .open(AreYouSureDialog, {
-        autoFocus: false,
-        data: `Da li zelis da otkazes rezervaciju za trening ${training.title}, ${this.getTrainingDateLabel(training)}?`,
-      })
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (!confirmed) {
-          return;
-        }
-
-        this.reservationsService
-          .cancel(reservation.id)
-          .pipe(handle(() => this.completeReservationCancellation(), (loading) => this.setReservationSubmitting(training.id, loading)))
-          .subscribe();
-      });
   }
 
   protected confirmDeleteTraining(training: TrainingCalendarResponse): void {
@@ -245,18 +232,11 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
 
   private loadTrainings(): void {
     this.trainingsService
-      .getAll()
+      .getAll({ activeOnly: this.isAdmin() ? this.activeOnly() : true })
       .pipe(handle((response) => {
         this.trainings.set(response.data);
         this.dataSource.data = response.data;
       }, (loading) => this.isLoading.set(loading)))
-      .subscribe();
-  }
-
-  private loadCurrentUserReservations(): void {
-    this.dashboardService
-      .getUserDashboard()
-      .pipe(handle((response) => this.currentUserReservations.set(response.data.upcomingReservations)))
       .subscribe();
   }
 
@@ -268,19 +248,6 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   private completeReservation(): void {
     this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Uspesno si prijavljen na trening.', type: 'success' });
     this.loadTrainings();
-    this.loadCurrentUserReservations();
-  }
-
-  private completeReservationCancellation(): void {
-    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Rezervacija je uspesno otkazana.', type: 'success' });
-    this.loadTrainings();
-    this.loadCurrentUserReservations();
-  }
-
-  private getCurrentUserReservation(training: TrainingCalendarResponse): ReservationResponse | undefined {
-    return this.currentUserReservations().find(
-      (reservation) => reservation.trainingSessionId === training.id && reservation.status === ReservationStatus.Reserved,
-    );
   }
 
   private getTrainingDateLabel(training: TrainingCalendarResponse): string {
@@ -292,7 +259,16 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   }
 
   private matchesSearch(training: TrainingCalendarResponse, filter: string): boolean {
-    return `${training.title} ${training.trainerName} ${training.location}`.toLowerCase().includes(filter);
+    return this.getSearchableTrainingText(training).includes(filter);
+  }
+
+  private getSearchableTrainingText(training: TrainingCalendarResponse): string {
+    const startDate = new Date(training.startTime);
+    const isoDate = startDate.toISOString().slice(0, 10);
+    const localizedDate = formatDateToStringWithDots(startDate);
+    const dayOfWeek = getDayOfWeek(training.startTime);
+
+    return `${training.title} ${training.trainerName} ${training.location} ${dayOfWeek} ${isoDate} ${localizedDate}`.toLowerCase();
   }
 
   private setReservationSubmitting(trainingId: string, isSubmitting: boolean): void {

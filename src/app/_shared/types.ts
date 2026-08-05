@@ -727,6 +727,7 @@ export interface TrainingSessionResponse extends TrainingCalendarResponse {
 export interface TrainingListRequest {
   date?: string;
   isCancelled?: boolean;
+  activeOnly?: boolean;
 }
 
 export interface CreateTrainingSessionRequest {
@@ -808,8 +809,29 @@ export interface ReservationResponse {
   notes?: string | null;
 }
 
+export interface DashboardActiveMembershipResponse {
+  paymentId?: string | null;
+  paymentType: PurchaseType;
+  numberOfSessions: number;
+  remainingSessions: number;
+  startDate: string;
+  endDate?: string | null;
+  status: string;
+}
+
+export interface DashboardUpcomingReservationResponse {
+  trainingSessionId: string;
+  trainingTitle: string;
+  trainingStartTime: string;
+  trainingEndTime: string;
+  trainerName: string;
+}
+
 export interface UserDashboardResponse {
-  upcomingReservations: ReservationResponse[];
+  activeMembership?: DashboardActiveMembershipResponse | null;
+  upcomingReservations: DashboardUpcomingReservationResponse[];
+  latestNotifications: NotificationResponse[];
+  unreadNotificationsCount: number;
 }
 
 export interface CreateReservationRequest {
@@ -874,6 +896,7 @@ export enum PurchaseType {
   Package12 = 1,
   Package6 = 2,
   SingleSessions = 3,
+  Package16 = 4,
 }
 
 export interface PaymentResponse {
@@ -882,6 +905,7 @@ export interface PaymentResponse {
   userFullName: string;
   amount: number;
   paymentDate: string;
+  startDate?: string | null;
   paymentType: PurchaseType;
   numberOfSessions: number;
   note?: string | null;
@@ -907,6 +931,11 @@ export interface PaymentPaginatedResponse {
   totalPages: number;
 }
 
+export interface AvailablePackageResponse {
+  purchaseType: PurchaseType;
+  numberOfSessions: number;
+}
+
 export interface CreatePaymentRequest {
   userId: string;
   amount: number;
@@ -922,7 +951,7 @@ export interface CreatePaymentFormModel {
   userSearch: string;
   amount: number;
   paymentType: PurchaseType;
-  numberOfSessions: number;
+  numberOfSessions: number | null;
   note: string | null;
   startDate: Date | null;
 }
@@ -943,6 +972,7 @@ export type PaymentDialogResult =
 export interface UpdatePaymentRequest {
   amount: number;
   paymentDate: string;
+  startDate?: string | null;
   note?: string | null;
 }
 

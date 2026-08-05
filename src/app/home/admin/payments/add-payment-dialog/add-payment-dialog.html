@@ -33,19 +33,20 @@
     <app-select-input
       label="Tip uplate"
       [field]="paymentForm.paymentType"
-      [options]="['Paket 12 termina', 'Paket 6 termina', 'Pojedinacni termini']"
-      [values]="purchaseTypes"
+      [options]="paymentTypeOptions()"
+      [values]="paymentTypeValues()"
+      [loading]="isPackagesLoading()"
       (onChange)="changePaymentType($event)"
     />
     <app-text-input label="Iznos (RSD)" type="number" [field]="paymentForm.amount" />
-    <app-text-input
-      label="Broj termina"
-      type="number"
-      [field]="paymentForm.numberOfSessions"
-    />
-    @if (!isEdit) {
-      <app-date-input label="Start date" [field]="paymentForm.startDate" />
+    @if (!isEdit && isSingleSessions()) {
+      <app-text-input
+        label="Broj termina"
+        type="number"
+        [field]="paymentForm.numberOfSessions"
+      />
     }
+    <app-date-input label="Start date" [field]="paymentForm.startDate" />
     <div class="sm:col-span-2">
       <app-textarea-input label="Napomena" [field]="paymentForm.note" />
     </div>
@@ -53,6 +54,6 @@
 
   <div class="dialog-footer">
     <app-button (onClick)="close()">Odustani</app-button>
-    <app-button type="submit" color="primary">{{ isEdit ? 'Sacuvaj izmene' : 'Sacuvaj uplatu' }}</app-button>
+    <app-button type="submit" color="primary" [disabled]="!isEdit && isPackagesLoading()">{{ isEdit ? 'Sacuvaj izmene' : 'Sacuvaj uplatu' }}</app-button>
   </div>
 </form>

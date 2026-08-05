@@ -48,6 +48,7 @@ export const PurchaseTypeLabels: Record<PurchaseType, string> = {
   [PurchaseType.Package12]: 'Paket 12 termina',
   [PurchaseType.Package6]: 'Paket 6 termina',
   [PurchaseType.SingleSessions]: 'Pojedinacni termini',
+  [PurchaseType.Package16]: 'Paket 16 termina',
 };
 
 export const NotificationTypeLabels: Record<NotificationType, string> = {
