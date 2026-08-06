@@ -1,0 +1,28 @@
+<section class="flex h-dvh w-screen flex-col bg-bg_primary sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:w-[32rem]">
+  <header class="dialog-header">
+    <div class="flex items-center gap-3">
+      <span class="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary">
+        <app-icon icon="info-circle" class="size-5 stroke-current" />
+      </span>
+      <div>
+        <h2 class="m-0 text-xl font-semibold text-text_primary">Važne informacije</h2>
+        <p class="mt-1 text-sm text-light">Pravila rezervacija i članarina</p>
+      </div>
+    </div>
+    <app-button-icon class="ml-auto" color="transparent" tooltip="Zatvori" (onClick)="dialogRef.close()">
+      <app-icon icon="close" class="size-5 stroke-current" />
+    </app-button-icon>
+  </header>
+
+  <div class="dialog-content space-y-3 p-5 sm:p-6">
+    <p class="rounded-xl border border-primary/15 bg-primary/5 px-4 py-3 text-sm leading-6 text-text_primary">Možete imati najviše 2 buduće rezervacije.</p>
+    <p class="rounded-xl border border-border bg-white px-4 py-3 text-sm leading-6 text-text_primary">Rezervacija je moguća i bez aktivne članarine.</p>
+    <p class="rounded-xl border border-border bg-white px-4 py-3 text-sm leading-6 text-text_primary">Rezervacijom se broj raspoloživih termina ne umanjuje.</p>
+    <p class="rounded-xl border border-border bg-white px-4 py-3 text-sm leading-6 text-text_primary">Broj termina se umanjuje tek nakon održanog treninga.</p>
+    <p class="rounded-xl border border-border bg-white px-4 py-3 text-sm leading-6 text-text_primary">Najviše 2 neiskorišćena termina iz Paketa 12 mogu da se prenesu u sledeći paket.</p>
+  </div>
+
+  <footer class="dialog-footer">
+    <app-button color="primary" (onClick)="dialogRef.close()">Razumem</app-button>
+  </footer>
+</section>

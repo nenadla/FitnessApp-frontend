@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ButtonIcon } from '../_components/button-icon/button-icon';
+import { Icon } from '../_components/icon/icon';
+import { ImportantInfoDialog } from '../_components/important-info-dialog/important-info-dialog';
 import { RouterOutlet, Routes } from '@angular/router';
 import { HeaderComponent } from './_header/header';
 import { SidebarComponent } from './_sidebar/sidebar';
@@ -6,11 +10,12 @@ import { roleGuard } from '../_shared/guards/role.guard';
 
 @Component({
   selector: 'app-home',
-  imports: [HeaderComponent, RouterOutlet, SidebarComponent],
+  imports: [ButtonIcon, HeaderComponent, Icon, RouterOutlet, SidebarComponent],
   templateUrl: './home.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+  private readonly dialog = inject(MatDialog);
   protected readonly isMobileNavigationOpen = signal(false);
 
   protected toggleMobileNavigation(): void {
@@ -19,6 +24,13 @@ export class HomeComponent {
 
   protected closeMobileNavigation(): void {
     this.isMobileNavigationOpen.set(false);
+  }
+
+  protected openImportantInfoDialog(): void {
+    this.dialog.open(ImportantInfoDialog, {
+      autoFocus: false,
+      maxWidth: 'calc(100vw - 2rem)',
+    });
   }
 }
 

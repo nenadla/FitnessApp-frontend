@@ -15,4 +15,8 @@
       <router-outlet />
     </main>
   </section>
+
+  <app-button-icon class="fixed bottom-4 right-4 z-30 [&_.custom-button]:size-12 sm:bottom-6 sm:right-6" color="primary" tooltip="Važne informacije" (onClick)="openImportantInfoDialog()">
+    <app-icon icon="info-circle" class="size-6 fill-white" />
+  </app-button-icon>
 </div>
