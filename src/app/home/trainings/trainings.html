@@ -36,9 +36,11 @@
       @for (training of filteredTrainings(); track training.id) {
         <app-training-card
           [training]="training"
+          [isReserved]="isTrainingReserved(training)"
           [canReserve]="canReserveTraining(training)"
           [isSubmitting]="reservationSubmittingId() === training.id"
           (reserve)="confirmReservation(training)"
+          (cancel)="confirmReservationCancellation(training)"
         />
       } @empty {
         <div class="rounded-2xl border border-border bg-bg_primary px-4 py-14 text-center text-sm text-light">Nema treninga za prikaz.</div>

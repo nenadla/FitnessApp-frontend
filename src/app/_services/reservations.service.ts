@@ -30,6 +30,10 @@ export class ReservationsService {
     return this.http.post<ApiResponse<ReservationResponse>>(`${environment.apiUrl}/api/reservations`, request);
   }
 
+  getMyUpcoming() {
+    return this.http.get<ApiResponse<ReservationResponse[]>>(`${environment.apiUrl}/api/reservations/my/upcoming`);
+  }
+
   cancel(id: string) {
     return this.http.post<ApiResponse<ReservationResponse>>(`${environment.apiUrl}/api/reservations/${id}/cancel`, null);
   }

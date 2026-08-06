@@ -6,6 +6,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { forkJoin } from 'rxjs';
 import { Button } from '../../_components/button/button';
 import { ButtonIcon } from '../../_components/button-icon/button-icon';
 import { MobileDataCard } from '../../_components/mobile-data-card/mobile-data-card';
@@ -14,7 +15,7 @@ import { Icon } from '../../_components/icon/icon';
 import { TextInputComponent } from '../../_form-inputs/text-input/text-input';
 import { handle } from '../../_shared/http-handler';
 import { formatDateToStringWithDots, getDayOfWeek } from '../../_shared/methods';
-import { TrainingCalendarResponse, TrainingDialogData, TrainingDialogResult, TrainingSearchFormModel } from '../../_shared/types';
+import { ReservationResponse, TrainingCalendarResponse, TrainingDialogData, TrainingDialogResult, TrainingSearchFormModel } from '../../_shared/types';
 import { TrainingsService } from '../../_services/trainings.service';
 import { ReservationsService } from '../../_services/reservations.service';
 import { SharedService } from '../../_services/shared.service';
@@ -63,6 +64,7 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   ];
   protected readonly dataSource = new MatTableDataSource<TrainingCalendarResponse>([]);
   protected readonly trainings = signal<TrainingCalendarResponse[]>([]);
+  protected readonly myReservations = signal<ReservationResponse[]>([]);
   protected readonly isLoading = signal(false);
   protected readonly reservationSubmittingId = signal<string | null>(null);
   protected readonly isAdmin = computed(() => this.authService.currentUser()?.role === 'Admin');
@@ -71,6 +73,9 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   protected readonly searchForm = form(this.searchModel);
   protected readonly searchTerm = signal('');
   protected readonly activeOnly = signal(true);
+  protected readonly reservationsByTrainingId = computed(() => new Map(
+    this.myReservations().map((reservation) => [reservation.trainingSessionId, reservation]),
+  ));
   protected readonly filteredTrainings = computed(() => {
     const filter = this.searchTerm();
 
@@ -162,8 +167,37 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
       });
   }
 
+  protected confirmReservationCancellation(training: TrainingCalendarResponse): void {
+    const reservation = this.reservationsByTrainingId().get(training.id);
+
+    if (!reservation) {
+      return;
+    }
+
+    this.dialog
+      .open(AreYouSureDialog, {
+        autoFocus: false,
+        data: `Da li želiš da otkažeš rezervaciju za trening ${training.title}, ${this.getTrainingDateLabel(training)}?`,
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          return;
+        }
+
+        this.reservationsService
+          .cancel(reservation.id)
+          .pipe(handle(() => this.completeReservationCancellation(), (loading) => this.setReservationSubmitting(training.id, loading)))
+          .subscribe();
+      });
+  }
+
   protected canReserveTraining(training: TrainingCalendarResponse): boolean {
-    return !training.isCancelled && training.reservedCount < training.capacity;
+    return !this.reservationsByTrainingId().has(training.id) && !training.isCancelled && training.reservedCount < training.capacity;
+  }
+
+  protected isTrainingReserved(training: TrainingCalendarResponse): boolean {
+    return this.reservationsByTrainingId().has(training.id);
   }
 
   protected reservationTooltip(training: TrainingCalendarResponse): string {
@@ -231,11 +265,23 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   }
 
   private loadTrainings(): void {
+    if (!this.isAdmin()) {
+      forkJoin({
+        trainings: this.trainingsService.getAll({ activeOnly: true }),
+        reservations: this.reservationsService.getMyUpcoming(),
+      })
+        .pipe(handle(({ trainings, reservations }) => {
+          this.setTrainings(trainings.data);
+          this.myReservations.set(reservations.data);
+        }, (loading) => this.isLoading.set(loading)))
+        .subscribe();
+      return;
+    }
+
     this.trainingsService
-      .getAll({ activeOnly: this.isAdmin() ? this.activeOnly() : true })
+      .getAll({ activeOnly: this.activeOnly() })
       .pipe(handle((response) => {
-        this.trainings.set(response.data);
-        this.dataSource.data = response.data;
+        this.setTrainings(response.data);
       }, (loading) => this.isLoading.set(loading)))
       .subscribe();
   }
@@ -248,6 +294,16 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   private completeReservation(): void {
     this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Uspešno si prijavljen na trening.', type: 'success' });
     this.loadTrainings();
+  }
+
+  private completeReservationCancellation(): void {
+    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Rezervacija je uspešno otkazana.', type: 'success' });
+    this.loadTrainings();
+  }
+
+  private setTrainings(trainings: TrainingCalendarResponse[]): void {
+    this.trainings.set(trainings);
+    this.dataSource.data = trainings;
   }
 
   private getTrainingDateLabel(training: TrainingCalendarResponse): string {
