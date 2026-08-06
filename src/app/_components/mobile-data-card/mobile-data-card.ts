@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MobileDataCardDetail, MobileDataCardStatusTone } from '../../_shared/types';
 
 @Component({
@@ -13,4 +13,5 @@ export class MobileDataCard {
   statusTone = input<MobileDataCardStatusTone>('success');
   details = input<readonly MobileDataCardDetail[]>([]);
   showActions = input(true);
+  detailClick = output<MobileDataCardDetail>();
 }

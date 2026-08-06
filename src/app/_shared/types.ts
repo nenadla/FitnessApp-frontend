@@ -649,6 +649,7 @@ export interface ApiResponse<T> {
 export interface MobileDataCardDetail {
   label: string;
   value: string | number | null | undefined;
+  clickable?: boolean;
 }
 
 export type MobileDataCardStatusTone = 'success' | 'error' | 'primary';

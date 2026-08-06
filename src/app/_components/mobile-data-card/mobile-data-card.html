@@ -27,7 +27,17 @@
       @for (detail of details(); track detail.label) {
         <div class="min-w-0">
           <dt class="text-xs font-medium text-light">{{ detail.label }}</dt>
-          <dd class="mt-0.5 truncate text-sm font-medium text-text_primary">{{ detail.value ?? '-' }}</dd>
+          @if (detail.clickable) {
+            <button
+              type="button"
+              class="mt-0.5 block max-w-full truncate text-sm font-medium text-primary hover:text-primary_h hover:underline"
+              (click)="detailClick.emit(detail)"
+            >
+              {{ detail.value ?? '-' }}
+            </button>
+          } @else {
+            <dd class="mt-0.5 truncate text-sm font-medium text-text_primary">{{ detail.value ?? '-' }}</dd>
+          }
         </div>
       }
     </dl>

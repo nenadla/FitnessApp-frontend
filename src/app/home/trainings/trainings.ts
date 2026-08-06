@@ -58,7 +58,6 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
     'title',
     'trainerName',
     'capacity',
-    'reservedCount',
     'status',
     'actions',
   ];
@@ -212,7 +211,7 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
     return [
       { label: 'Vreme', value: `${this.formatTime(training.startTime)} - ${this.formatTime(training.endTime)}` },
       { label: 'Trener', value: training.trainerName || '-' },
-      { label: 'Kapacitet', value: `${training.reservedCount}/${training.capacity}` },
+      { label: 'Kapacitet', value: `${training.reservedCount}/${training.capacity}`, clickable: true },
     ];
   }
 

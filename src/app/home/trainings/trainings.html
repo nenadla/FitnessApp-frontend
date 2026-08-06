@@ -57,6 +57,7 @@
           [status]="training.isCancelled ? 'Otkazan' : 'Aktivan'"
           [statusTone]="training.isCancelled ? 'error' : 'success'"
           [details]="trainingDetails(training)"
+          (detailClick)="openTrainingReservationsDialog(training)"
         >
           <app-button-icon color="transparent" size="small" tooltip="Izmeni trening" (onClick)="openEditTrainingDialog(training)">
             <app-icon icon="edit" class="size-4 stroke-current" />
@@ -104,11 +105,6 @@
 
       <ng-container matColumnDef="capacity">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Kapacitet</th>
-        <td mat-cell *matCellDef="let training">{{ training.capacity }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="reservedCount">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Prijavljeno</th>
         <td mat-cell *matCellDef="let training">
           @if (isAdmin()) {
             <button
@@ -116,10 +112,10 @@
               class="font-medium text-primary hover:text-primary_h hover:underline"
               (click)="openTrainingReservationsDialog(training)"
             >
-              {{ training.reservedCount }}
+              {{ training.reservedCount }}/{{ training.capacity }}
             </button>
           } @else {
-            {{ training.reservedCount }}
+            {{ training.reservedCount }}/{{ training.capacity }}
           }
         </td>
       </ng-container>
