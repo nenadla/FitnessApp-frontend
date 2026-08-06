@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Button } from '../../_components/button/button';
 import { Icon } from '../../_components/icon/icon';
@@ -23,6 +23,7 @@ export class LandingComponent implements OnInit {
   protected readonly packages = signal<LandingPackageResponse[]>([]);
   protected readonly isLoading = signal(false);
   protected readonly expandedPackage = signal<PurchaseType | null>(null);
+  protected readonly showScrollToTop = signal(false);
 
   ngOnInit(): void {
     this.sharedService.setTitle(Titles.Landing);
@@ -36,6 +37,11 @@ export class LandingComponent implements OnInit {
 
   protected togglePackageDetails(packageType: PurchaseType): void {
     this.expandedPackage.update((value) => (value === packageType ? null : packageType));
+  }
+
+  @HostListener('window:scroll')
+  protected updateScrollToTopVisibility(): void {
+    this.showScrollToTop.set(window.scrollY > 320);
   }
 
   private loadPackages(): void {

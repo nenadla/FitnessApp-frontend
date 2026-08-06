@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit {
   protected readonly currentUser = computed(() => this.authService.currentUser());
   protected readonly activeMembership = computed(() => this.dashboard()?.activeMembership ?? null);
   protected readonly upcomingReservations = computed(() => this.dashboard()?.upcomingReservations ?? []);
+  protected readonly additionalUpcomingReservations = computed(() => this.upcomingReservations().slice(1));
   protected readonly latestNotifications = computed(() => this.dashboard()?.latestNotifications ?? []);
   protected readonly getDayOfWeek = getDayOfWeek;
   protected readonly notificationTypeLabels = NotificationTypeLabels;
