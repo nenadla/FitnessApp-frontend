@@ -936,6 +936,19 @@ export interface AvailablePackageResponse {
   numberOfSessions: number;
 }
 
+export interface LandingPackageResponse {
+  title: string;
+  subtitle: string;
+  description: string;
+  learnMoreDescription: string;
+  details: string[];
+  badge: string | null;
+  features: string[];
+  price: string;
+  purchaseType: PurchaseType;
+  numberOfSessions: number;
+}
+
 export interface CreatePaymentRequest {
   userId: string;
   amount: number;

@@ -29,7 +29,11 @@
   </section>
 
   <section id="kako-funkcionise" class="mx-auto max-w-6xl scroll-mt-4 px-4 py-12 sm:px-8 sm:py-16 lg:py-9">
-    <div class="mx-auto max-w-xl text-center"><p class="text-xs font-bold uppercase tracking-[0.18em] text-primary_h">Jednostavno i brzo</p><h2 class="mt-2 text-2xl font-bold sm:text-3xl">Kako funkcioniše?</h2><p class="mt-2 text-sm text-light">Od registracije do omiljenog treninga u nekoliko koraka.</p></div>
+    <div class="mx-auto max-w-xl text-center">
+      <p class="text-xs font-bold uppercase tracking-[0.18em] text-primary_h">Jednostavno i brzo</p>
+      <h2 class="mt-2 text-2xl font-bold sm:text-3xl">Kako funkcioniše?</h2>
+      <p class="mt-2 text-sm text-light">Od registracije do omiljenog treninga u nekoliko koraka.</p>
+    </div>
     <div class="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <article class="cursor-pointer rounded-2xl border border-purple-200 bg-purple-100/85 p-4 text-left transition hover:-translate-y-0.5 hover:border-purple-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" role="link" tabindex="0" (click)="navigate('register')" (keydown.enter)="navigate('register')" (keydown.space)="$event.preventDefault(); navigate('register')"><span class="grid size-9 place-items-center rounded-xl bg-white text-purple-600 shadow-sm"><app-icon icon="user" class="size-5 stroke-current" /></span><h3 class="mt-3 text-sm font-semibold">1. Registruj se</h3><p class="mt-1 text-xs leading-5 text-light">Kreiraj nalog brzo i jednostavno.</p></article>
       <article class="rounded-2xl border border-orange-200 bg-orange-100/85 p-4"><span class="grid size-9 place-items-center rounded-xl bg-white text-orange-500 shadow-sm"><app-icon icon="confirm" class="size-5 stroke-current" /></span><h3 class="mt-3 text-sm font-semibold">2. Sačekaj verifikaciju</h3><p class="mt-1 text-xs leading-5 text-light">Administrator potvrđuje tvoj nalog.</p></article>
@@ -40,12 +44,78 @@
 
   <section class="border-y border-border bg-white">
     <div class="mx-auto max-w-6xl px-4 py-12 sm:px-8 sm:py-16 lg:py-9">
-      <div class="mx-auto max-w-xl text-center"><p class="text-xs font-bold uppercase tracking-[0.18em] text-primary_h">Izaberi svoj ritam</p><h2 class="mt-2 text-2xl font-bold sm:text-3xl">Paketi i termini</h2><p class="mt-2 text-sm text-light">Fleksibilne opcije za svaki nivo treninga i raspored.</p></div>
-      <div class="mt-7 grid gap-4 lg:grid-cols-3">
-        <article class="flex flex-col rounded-2xl border border-purple-200 bg-[linear-gradient(145deg,#f1e7ff,#e2d1ff)] p-5"><h3 class="text-sm font-semibold">Paket 12 termina</h3><div class="mt-3 flex items-end gap-2"><span class="text-4xl font-black text-primary">12</span><span class="pb-1 text-xs text-light">termina</span></div><ul class="mt-4 grid gap-1.5 text-xs text-light"><li>Važi 1 mesec</li><li>Pogodno za redovne treninge</li><li>Najbolji odnos cene i termina</li></ul><app-button class="mt-5 [&_.custom-button]:h-9 [&_.custom-button]:w-full" color="primary" (onClick)="navigate('register')">Saznaj više</app-button></article>
-        <article class="flex flex-col rounded-2xl border border-emerald-200 bg-[linear-gradient(145deg,#e4f8ed,#ccefdc)] p-5"><h3 class="text-sm font-semibold">Paket 6 termina</h3><div class="mt-3 flex items-end gap-2"><span class="text-4xl font-black text-emerald-700">6</span><span class="pb-1 text-xs text-light">termina</span></div><ul class="mt-4 grid gap-1.5 text-xs text-light"><li>Važi 1 mesec</li><li>Besplatna promena termina</li><li>Fleksibilna opcija</li></ul><app-button class="mt-5 [&_.custom-button]:h-9 [&_.custom-button]:w-full [&_.custom-button]:border-emerald-600 [&_.custom-button]:bg-emerald-600" color="primary" (onClick)="navigate('register')">Saznaj više</app-button></article>
-        <article class="flex flex-col rounded-2xl border border-rose-200 bg-[linear-gradient(145deg,#ffe7ed,#ffd3df)] p-5"><h3 class="text-sm font-semibold">Pojedinačni termini</h3><div class="mt-3 flex items-end gap-2"><span class="text-4xl font-black text-rose-500">∞</span><span class="pb-1 text-xs text-light">po izboru</span></div><ul class="mt-4 grid gap-1.5 text-xs text-light"><li>Bez roka trajanja</li><li>Kupi onoliko koliko ti treba</li><li>Koristi kad želiš</li></ul><app-button class="mt-5 [&_.custom-button]:h-9 [&_.custom-button]:w-full [&_.custom-button]:border-rose-500 [&_.custom-button]:bg-rose-500" color="primary" (onClick)="navigate('register')">Saznaj više</app-button></article>
+      <div class="mx-auto max-w-xl text-center">
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-primary_h">Izaberi svoj ritam</p>
+        <h2 class="mt-2 text-2xl font-bold sm:text-3xl">Paketi i termini</h2>
+        <p class="mt-2 text-sm text-light">Fleksibilne opcije za svaki nivo treninga i raspored.</p>
       </div>
+
+      @if (isLoading()) {
+        <div class="mt-7 grid gap-4 lg:grid-cols-3">
+          @for (_ of [1, 2, 3]; track $index) {
+            <article class="h-full animate-pulse rounded-2xl border border-border bg-bg_secondary p-5">
+              <div class="h-4 w-28 rounded-full bg-slate-200"></div>
+              <div class="mt-4 h-10 w-20 rounded-xl bg-slate-200"></div>
+              <div class="mt-5 space-y-2">
+                <div class="h-3 rounded-full bg-slate-200"></div>
+                <div class="h-3 rounded-full bg-slate-200"></div>
+                <div class="h-3 w-4/5 rounded-full bg-slate-200"></div>
+              </div>
+              <div class="mt-6 h-10 rounded-xl bg-slate-200"></div>
+            </article>
+          }
+        </div>
+      } @else if (packages().length) {
+        <div class="mt-7 grid gap-4 lg:grid-cols-3">
+          @for (packageItem of packages(); track packageItem.purchaseType) {
+            <article class="flex h-full flex-col rounded-2xl border border-border bg-white p-5 shadow-sm shadow-black/5">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <h3 class="mt-3 text-sm font-semibold text-text_primary">{{ packageItem.title }}</h3>
+                  <p class="mt-1 text-xs leading-5 text-light">{{ packageItem.subtitle }}</p>
+                </div>
+                <div class="shrink-0 text-right">
+                  <span class="block text-4xl font-black text-primary">{{ packageItem.numberOfSessions }}</span>
+                  <span class="text-xs text-light">termina</span>
+                </div>
+              </div>
+
+              <p class="mt-4 text-sm leading-6 text-text_primary">{{ packageItem.description }}</p>
+
+              <ul class="mt-4 grid gap-1.5 text-xs leading-5 text-light">
+                @for (feature of packageItem.features; track feature) {
+                  <li class="flex gap-2">
+                    <span class="mt-1 size-1.5 shrink-0 rounded-full bg-primary"></span>
+                    <span>{{ feature }}</span>
+                  </li>
+                }
+              </ul>
+
+              @if (expandedPackage() === packageItem.purchaseType) {
+                <div class="mt-5 rounded-2xl border border-primary/10 bg-[linear-gradient(180deg,#faf7ff,#fff)] p-4">
+                  <p class="text-sm font-semibold text-text_primary">Detalji paketa</p>
+                  <p class="mt-2 text-sm leading-6 text-light">{{ packageItem.learnMoreDescription }}</p>
+                  <div class="mt-4 grid gap-2 text-xs leading-6 text-light">
+                    @for (detail of packageItem.details; track detail) {
+                      <p class="rounded-xl bg-white px-3 py-2 shadow-sm shadow-black/5">{{ detail }}</p>
+                    }
+                  </div>
+                </div>
+              }
+
+              <div class="mt-auto pt-5">
+                <app-button class="[&_.custom-button]:w-full" color="primary" (onClick)="togglePackageDetails(packageItem.purchaseType)">
+                  {{ expandedPackage() === packageItem.purchaseType ? 'Zatvori' : 'Saznaj više' }}
+                </app-button>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="mt-7 rounded-2xl border border-dashed border-border bg-bg_secondary px-6 py-8 text-center text-sm text-light">
+          Paketi trenutno nisu dostupni.
+        </div>
+      }
     </div>
   </section>
 
