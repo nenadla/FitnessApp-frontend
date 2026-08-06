@@ -21,7 +21,7 @@
     <div class="sm:col-span-2">
       <app-autocomplete-input
         label="Korisnik"
-        placeholder="Pretrazi korisnika"
+        placeholder="Pretraži korisnika"
         [field]="paymentForm.userSearch"
         [options]="userLabels()"
         [loading]="isUsersLoading()"
@@ -54,6 +54,6 @@
 
   <div class="dialog-footer">
     <app-button (onClick)="close()">Odustani</app-button>
-    <app-button type="submit" color="primary" [disabled]="!isEdit && isPackagesLoading()">{{ isEdit ? 'Sacuvaj izmene' : 'Sacuvaj uplatu' }}</app-button>
+    <app-button type="submit" color="primary" [disabled]="!isEdit && isPackagesLoading()">{{ isEdit ? 'Sačuvaj izmene' : 'Sačuvaj uplatu' }}</app-button>
   </div>
 </form>

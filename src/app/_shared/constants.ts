@@ -21,7 +21,7 @@ export const Titles = {
   Landing: 'Retro Fitness',
   Login: 'Prijava',
   Register: 'Registracija',
-  Home: 'Pocetna',
+  Home: 'Početna',
   Dashboard: 'Dashboard',
   Trainings: 'Treninzi',
   AdminReservations: 'Rezervacije',
@@ -47,7 +47,7 @@ export const UserStatusLabels: Record<UserStatus, string> = {
 export const PurchaseTypeLabels: Record<PurchaseType, string> = {
   [PurchaseType.Package12]: 'Paket 12 termina',
   [PurchaseType.Package6]: 'Paket 6 termina',
-  [PurchaseType.SingleSessions]: 'Pojedinacni termini',
+  [PurchaseType.SingleSessions]: 'Pojedinačni termini',
   [PurchaseType.Package16]: 'Paket 16 termina',
 };
 
@@ -55,7 +55,7 @@ export const NotificationTypeLabels: Record<NotificationType, string> = {
   [NotificationType.General]: 'Opste',
   [NotificationType.TrainingCancelled]: 'Trening otkazan',
   [NotificationType.TrainingUpdated]: 'Trening izmenjen',
-  [NotificationType.MembershipExpiring]: 'Clanarina istice',
+  [NotificationType.MembershipExpiring]: 'Članarina ističe',
   [NotificationType.System]: 'Sistemska',
 };
 

@@ -1,6 +1,6 @@
 <section class="px-1 py-3 sm:p-6" aria-label="Notifikacije">
   <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
-    <div><h1 class="m-0 text-2xl font-semibold text-neutral-900">Notifikacije</h1><p class="mt-1 text-sm text-neutral-500">Pregled obavestenja.</p></div>
+    <div><h1 class="m-0 text-2xl font-semibold text-neutral-900">Notifikacije</h1><p class="mt-1 text-sm text-neutral-500">Pregled obaveštenja.</p></div>
     @if (isAdmin()) {
       <app-button color="primary" (onClick)="openCreateDialog()"><app-icon icon="add" class="mr-1 size-4 stroke-current" />Nova notifikacija</app-button>
     }
@@ -18,7 +18,7 @@
       }
 
       @if (mobileHasNextPage()) {
-        <app-button class="block w-full [&_.custom-button]:w-full" color="light" [loading]="isLoadingMore()" (onClick)="loadMoreMobile()">Ucitaj jos</app-button>
+        <app-button class="block w-full [&_.custom-button]:w-full" color="light" [loading]="isLoadingMore()" (onClick)="loadMoreMobile()">Učitaj još</app-button>
       }
     }
   </div>

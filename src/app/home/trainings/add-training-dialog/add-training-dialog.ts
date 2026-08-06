@@ -42,7 +42,7 @@ export class AddTrainingDialog implements OnInit {
   protected readonly form = form(this.model, (path) => {
     required(path.title, { message: 'Naziv treninga je obavezan.' });
     required(path.date, { message: 'Datum treninga je obavezan.' });
-    required(path.startTime, { message: 'Pocetak treninga je obavezan.' });
+    required(path.startTime, { message: 'Početak treninga je obavezan.' });
     required(path.endTime, { message: 'Kraj treninga je obavezan.' });
     required(path.capacity, { message: 'Kapacitet je obavezan.' });
   });

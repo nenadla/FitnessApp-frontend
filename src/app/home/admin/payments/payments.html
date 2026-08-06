@@ -26,7 +26,7 @@
           <app-button-icon color="transparent" size="small" tooltip="Izmeni uplatu" (onClick)="openEditPaymentDialog(payment)">
             <app-icon icon="edit" class="size-4 stroke-current" />
           </app-button-icon>
-          <app-button-icon color="transparent" size="small" tooltip="Obrisi uplatu" (onClick)="confirmDeletePayment(payment)">
+          <app-button-icon color="transparent" size="small" tooltip="Obriši uplatu" (onClick)="confirmDeletePayment(payment)">
             <app-icon icon="delete" class="size-4 fill-red-500" />
           </app-button-icon>
         </app-mobile-data-card>
@@ -37,7 +37,7 @@
       }
 
       @if (mobileHasNextPage()) {
-        <app-button class="block w-full [&_.custom-button]:w-full" color="light" [loading]="isLoadingMore()" (onClick)="loadMoreMobile()">Ucitaj jos</app-button>
+        <app-button class="block w-full [&_.custom-button]:w-full" color="light" [loading]="isLoadingMore()" (onClick)="loadMoreMobile()">Učitaj još</app-button>
       }
     }
   </div>
@@ -87,7 +87,7 @@
             <app-button-icon color="transparent" size="small" tooltip="Izmeni uplatu" (onClick)="openEditPaymentDialog(payment)">
               <app-icon icon="edit" class="size-4 stroke-current" />
             </app-button-icon>
-            <app-button-icon color="transparent" size="small" tooltip="Obrisi uplatu" (onClick)="confirmDeletePayment(payment)">
+            <app-button-icon color="transparent" size="small" tooltip="Obriši uplatu" (onClick)="confirmDeletePayment(payment)">
               <app-icon icon="delete" class="size-4 fill-red-500" />
             </app-button-icon>
           </div>

@@ -24,7 +24,7 @@
     </div>
 
     <app-date-input label="Datum treninga" [field]="form.date" />
-    <app-time-input label="Pocetak" [field]="form.startTime" />
+    <app-time-input label="Početak" [field]="form.startTime" />
     <app-time-input label="Kraj" [field]="form.endTime" />
     <app-text-input label="Kapacitet" type="number" [field]="form.capacity" />
     @if (!isEdit) {
@@ -40,6 +40,6 @@
 
   <div class="dialog-footer">
     <app-button (onClick)="close()">Odustani</app-button>
-    <app-button type="submit" color="primary">{{ isEdit ? 'Sacuvaj izmene' : 'Sacuvaj trening' }}</app-button>
+    <app-button type="submit" color="primary">{{ isEdit ? 'Sačuvaj izmene' : 'Sačuvaj trening' }}</app-button>
   </div>
 </form>

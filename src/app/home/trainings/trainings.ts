@@ -147,7 +147,7 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
     this.dialog
       .open(AreYouSureDialog, {
         autoFocus: false,
-        data: `Da li zelis da se prijavis na trening ${training.title}, ${this.getTrainingDateLabel(training)}?`,
+        data: `Da li želiš da se prijaviš na trening ${training.title}, ${this.getTrainingDateLabel(training)}?`,
       })
       .afterClosed()
       .subscribe((confirmed) => {
@@ -186,7 +186,7 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
     this.dialog
       .open(AreYouSureDialog, {
         autoFocus: false,
-        data: 'Da li zelis da obrises ovaj trening? Ova akcija se ne moze ponistiti.',
+        data: 'Da li želiš da obrišeš ovaj trening? Ova akcija se ne može poništiti.',
       })
       .afterClosed()
       .subscribe((confirmed) => {
@@ -196,7 +196,7 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
 
         this.trainingsService
           .delete(training.id)
-          .pipe(handle(() => this.completeMutation('Trening je uspesno obrisan.'), (loading) => this.isLoading.set(loading)))
+          .pipe(handle(() => this.completeMutation('Trening je uspešno obrisan.'), (loading) => this.isLoading.set(loading)))
           .subscribe();
       });
   }
@@ -218,14 +218,14 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
         if (result.mode === 'create') {
           this.trainingsService
             .create(result.request)
-            .pipe(handle(() => this.completeMutation('Trening je uspesno dodat.'), (loading) => this.isLoading.set(loading)))
+            .pipe(handle(() => this.completeMutation('Trening je uspešno dodat.'), (loading) => this.isLoading.set(loading)))
             .subscribe();
           return;
         }
 
         this.trainingsService
           .update(result.id, result.request)
-          .pipe(handle(() => this.completeMutation('Izmene treninga su uspesno sacuvane.'), (loading) => this.isLoading.set(loading)))
+          .pipe(handle(() => this.completeMutation('Izmene treninga su uspešno sačuvane.'), (loading) => this.isLoading.set(loading)))
           .subscribe();
       });
   }
@@ -246,7 +246,7 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   }
 
   private completeReservation(): void {
-    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Uspesno si prijavljen na trening.', type: 'success' });
+    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Uspešno si prijavljen na trening.', type: 'success' });
     this.loadTrainings();
   }
 

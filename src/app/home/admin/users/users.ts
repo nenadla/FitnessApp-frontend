@@ -110,7 +110,7 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
   protected deleteUser(user: UserListResponse): void {
     this.dialog.open(AreYouSureDialog, {
       autoFocus: false,
-      data: `Da li zelis da obrises korisnika ${user.fullName}?`,
+      data: `Da li želiš da obrišeš korisnika ${user.fullName}?`,
     });
   }
 
@@ -124,10 +124,10 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
 
     const message =
       action === 'verify'
-        ? 'Korisnik je uspesno verifikovan.'
+        ? 'Korisnik je uspešno verifikovan.'
         : action === 'block'
-          ? 'Korisnik je uspesno blokiran.'
-          : 'Korisnik je uspesno odblokiran.';
+          ? 'Korisnik je uspešno blokiran.'
+          : 'Korisnik je uspešno odblokiran.';
 
     request.pipe(handle(() => this.completeMutation(message), (loading) => this.isLoading.set(loading))).subscribe();
   }

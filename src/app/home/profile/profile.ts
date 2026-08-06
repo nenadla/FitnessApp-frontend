@@ -75,7 +75,11 @@ export class ProfileComponent implements OnInit {
     }
 
     this.passwordError.set('');
-    this.profileService.changePassword({ currentPassword: value.currentPassword, newPassword: value.newPassword })
+    this.profileService.changePassword({
+      currentPassword: value.currentPassword,
+      newPassword: value.newPassword,
+      confirmPassword: value.confirmPassword,
+    })
       .pipe(handle(() => this.completePasswordChange(), (loading) => this.isChangingPassword.set(loading)))
       .subscribe();
   }
@@ -94,11 +98,11 @@ export class ProfileComponent implements OnInit {
     this.profile.set(profile);
     this.profileModel.set({ firstName: profile.firstName, lastName: profile.lastName, phoneNumber: profile.phoneNumber ?? '' });
     this.authService.updateCurrentUser(profile.firstName, profile.lastName);
-    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Podaci profila su uspesno sacuvani.', type: 'success' });
+    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Podaci profila su uspešno sačuvani.', type: 'success' });
   }
 
   private completePasswordChange(): void {
-    this.passwordModel.set({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Lozinka je uspesno promenjena.', type: 'success' });
+    this.passwordForm().reset({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Lozinka je uspešno promenjena.', type: 'success' });
   }
 }

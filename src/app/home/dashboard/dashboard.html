@@ -6,15 +6,15 @@
   } @else {
     <section class="mx-auto max-w-5xl space-y-5 pb-4 sm:space-y-6 lg:flex lg:h-[calc(100dvh-7rem)] lg:flex-col lg:overflow-hidden lg:pb-0">
       <header class="lg:shrink-0">
-        <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">Dobrodosla, {{ user.firstName }}!</h1>
-        <p class="mt-1 text-sm text-neutral-500">Spremna za jos jedan sjajan trening?</p>
+        <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">Dobrodošla, {{ user.firstName }}!</h1>
+        <p class="mt-1 text-sm text-neutral-500">Spremna za još jedan sjajan trening?</p>
       </header>
 
       @if (activeMembership(); as membership) {
         <article class="relative overflow-hidden rounded-2xl bg-[linear-gradient(120deg,#f6edff_0%,#efeaff_48%,#dfd1ff_100%)] p-5 shadow-sm sm:p-6 lg:shrink-0">
           <img
             src="/assets/dashboard/korisnicki-panel-trenutna-clanarina.png"
-            alt="Clanica sa flasom za vodu"
+            alt="Članica sa flašom za vodu"
             class="absolute inset-y-0 right-0 block h-full w-[48%] object-cover object-[78%_center] opacity-75 md:opacity-100"
           />
           <div class="absolute inset-y-0 right-[36%] block w-32 bg-gradient-to-r from-[#efeaff] to-transparent"></div>
@@ -37,12 +37,12 @@
                 </p>
               </div>
               <div>
-                <p class="text-xs font-medium text-neutral-500">Vazi do</p>
+                <p class="text-xs font-medium text-neutral-500">Važi do</p>
                 <p class="mt-1 text-base font-semibold text-neutral-900">
                   {{ membership.endDate ? (membership.endDate | date: 'dd.MM.yyyy.') : '-' }}
                 </p>
                 @if (membership.endDate) {
-                  <p class="mt-1 text-xs text-neutral-500">Mesecna clanarina</p>
+                  <p class="mt-1 text-xs text-neutral-500">Mesečna članarina</p>
                 }
               </div>
             </div>
@@ -54,8 +54,8 @@
           <div class="mx-auto grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary">
             <app-icon icon="calendar-check" class="size-6 stroke-current" />
           </div>
-          <h2 class="mt-4 text-xl font-semibold text-neutral-900">Nemas aktivnu clanarinu</h2>
-          <p class="mt-2 text-sm text-neutral-600">Za rezervaciju treninga potrebna je aktivna clanarina.</p>
+          <h2 class="mt-4 text-xl font-semibold text-neutral-900">Nemaš aktivnu članarinu</h2>
+          <p class="mt-2 text-sm text-neutral-600">Za rezervaciju treninga potrebna je aktivna članarina.</p>
         </article>
       }
 
@@ -64,7 +64,7 @@
           <div class="flex items-center justify-between gap-4">
             <div class="flex items-center gap-2 text-sm font-semibold text-neutral-900">
               <app-icon icon="calendar-check" class="size-5 stroke-primary" />
-              Sledeci trening
+              Sledeći trening
             </div>
             <a routerLink="/home/trainings" class="text-xs font-semibold text-primary hover:underline">Vidi sve</a>
           </div>
@@ -90,7 +90,7 @@
                   <app-icon icon="calendar-check" class="size-6 stroke-current" />
                 </div>
                 <h2 class="mt-4 text-lg font-semibold text-neutral-900">Nema narednih treninga</h2>
-                <p class="mt-2 text-sm text-neutral-500">Rezervisi termin koji ti odgovara.</p>
+                <p class="mt-2 text-sm text-neutral-500">Rezerviši termin koji ti odgovara.</p>
               </div>
             </div>
           }
@@ -100,7 +100,7 @@
           <div class="flex items-center justify-between gap-4">
             <div class="flex items-center gap-2 text-sm font-semibold text-neutral-900">
               <app-icon icon="info-circle" class="size-5 stroke-primary" />
-              Poslednja obavestenja
+              Poslednja obaveštenja
             </div>
             <a routerLink="/home/notifications" class="text-xs font-semibold text-primary hover:underline">Vidi sve</a>
           </div>
@@ -128,8 +128,8 @@
                 <div class="mx-auto grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary">
                   <app-icon icon="info-circle" class="size-6 stroke-current" />
                 </div>
-                <h2 class="mt-4 text-lg font-semibold text-neutral-900">Nema obavestenja</h2>
-                <p class="mt-2 text-sm text-neutral-500">Ovde ce biti prikazana nova obavestenja.</p>
+                <h2 class="mt-4 text-lg font-semibold text-neutral-900">Nema obaveštenja</h2>
+                <p class="mt-2 text-sm text-neutral-500">Ovde će biti prikazana nova obaveštenja.</p>
               </div>
             </div>
           }

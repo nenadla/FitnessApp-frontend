@@ -135,7 +135,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   private completeCreation(): void {
-    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Notifikacija je uspesno poslata.', type: 'success' });
+    this.sharedService.toast.set({ show: true, title: 'Uspeh', text: 'Notifikacija je uspešno poslata.', type: 'success' });
     this.loadNotifications();
   }
 }

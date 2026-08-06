@@ -106,7 +106,7 @@ export class AdminPaymentsComponent implements AfterViewInit, OnInit {
     this.dialog
       .open(AreYouSureDialog, {
         autoFocus: false,
-        data: `Da li zelis da obrises uplatu korisnika ${payment.userFullName}? Ova akcija se ne moze ponistiti.`,
+        data: `Da li želiš da obrišeš uplatu korisnika ${payment.userFullName}? Ova akcija se ne može poništiti.`,
       })
       .afterClosed()
       .subscribe((confirmed) => {
@@ -116,7 +116,7 @@ export class AdminPaymentsComponent implements AfterViewInit, OnInit {
 
         this.paymentsService
           .delete(payment.id)
-          .pipe(handle(() => this.completeMutation('Uplata je uspesno obrisana.'), (loading) => this.isLoading.set(loading)))
+          .pipe(handle(() => this.completeMutation('Uplata je uspešno obrisana.'), (loading) => this.isLoading.set(loading)))
           .subscribe();
       });
   }
@@ -166,11 +166,11 @@ export class AdminPaymentsComponent implements AfterViewInit, OnInit {
 
     this.paymentsService
       .update(result.id, result.request)
-      .pipe(handle(() => this.completeMutation('Uplata je uspesno izmenjena.'), (loading) => this.isLoading.set(loading)))
+      .pipe(handle(() => this.completeMutation('Uplata je uspešno izmenjena.'), (loading) => this.isLoading.set(loading)))
       .subscribe();
   }
 
-  private completeMutation(text: string = 'Uplata je uspesno evidentirana.'): void {
+  private completeMutation(text: string = 'Uplata je uspešno evidentirana.'): void {
     this.sharedService.toast.set({ show: true, title: 'Uspeh', text, type: 'success' });
     this.loadPayments();
   }

@@ -39,7 +39,7 @@ export class AuthService {
     const refreshToken = this.getRefreshToken();
 
     if (!refreshToken) {
-      throw new Error('Nema aktivne sesije za osvezavanje tokena.');
+      throw new Error('Nema aktivne sesije za osvežavanje tokena.');
     }
 
     const request: RefreshTokenRequest = { refreshToken };

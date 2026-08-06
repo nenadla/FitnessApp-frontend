@@ -65,7 +65,7 @@ export class RegisterComponent {
       .pipe(
         handle(
           () => {
-            this.successMessage.set('Registracija je uspesna. Sacekaj verifikaciju naloga od administratora.');
+            this.successMessage.set('Registracija je uspešna. Sačekaj verifikaciju naloga od administratora.');
           },
           (loading) => this.isSubmitting.set(loading),
         ),

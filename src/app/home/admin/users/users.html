@@ -18,7 +18,7 @@
           <app-button-icon color="transparent" size="small" tooltip="Promeni status" (onClick)="openStatusDialog(user)">
             <app-icon icon="edit" class="size-4 stroke-current" />
           </app-button-icon>
-          <app-button-icon color="transparent" size="small" tooltip="Obrisi korisnika" (onClick)="deleteUser(user)">
+          <app-button-icon color="transparent" size="small" tooltip="Obriši korisnika" (onClick)="deleteUser(user)">
             <app-icon icon="delete" class="size-4 fill-red-500" />
           </app-button-icon>
         </app-mobile-data-card>
@@ -29,7 +29,7 @@
       }
 
       @if (mobileHasNextPage()) {
-        <app-button class="block w-full [&_.custom-button]:w-full" color="light" [loading]="isLoadingMore()" (onClick)="loadMoreMobile()">Ucitaj jos</app-button>
+        <app-button class="block w-full [&_.custom-button]:w-full" color="light" [loading]="isLoadingMore()" (onClick)="loadMoreMobile()">Učitaj još</app-button>
       }
     }
   </div>
@@ -86,7 +86,7 @@
         <th mat-header-cell *matHeaderCellDef>Akcije</th>
         <td mat-cell *matCellDef="let user" class="retro-table-actions">
           <div class="flex justify-center gap-1">
-            <app-button-icon color="transparent" size="small" tooltip="Obrisi korisnika" (onClick)="deleteUser(user)">
+            <app-button-icon color="transparent" size="small" tooltip="Obriši korisnika" (onClick)="deleteUser(user)">
               <app-icon icon="delete" class="size-4 fill-red-500" />
             </app-button-icon>
           </div>

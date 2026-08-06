@@ -18,9 +18,9 @@
   <div class="mt-5 flex items-center gap-3 border-t border-border pt-4 sm:mt-0 sm:w-44 sm:flex-col sm:items-stretch sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0">
     <div class="flex-1 text-sm sm:text-center"><span class="font-semibold text-primary">{{ training().reservedCount }}/{{ training().capacity }}</span><span class="ml-1 text-light">prijavljeno</span></div>
     @if (isReserved()) {
-      <app-button class="[&_.custom-button]:w-full" color="light" [loading]="isSubmitting()" (onClick)="cancel.emit()">Otkazi rezervaciju</app-button>
+      <app-button class="[&_.custom-button]:w-full" color="light" [loading]="isSubmitting()" (onClick)="cancel.emit()">Otkaži rezervaciju</app-button>
     } @else {
-      <app-button class="[&_.custom-button]:w-full" color="primary" [disabled]="!canReserve()" [loading]="isSubmitting()" (onClick)="reserve.emit()">Rezervisi</app-button>
+      <app-button class="[&_.custom-button]:w-full" color="primary" [disabled]="!canReserve()" [loading]="isSubmitting()" (onClick)="reserve.emit()">Rezerviši</app-button>
     }
   </div>
 </article>

@@ -55,7 +55,7 @@ export class AddPaymentDialog implements OnInit {
   protected readonly isPackagesLoading = signal(false);
   protected readonly paymentTypeOptions = computed(() => [
     ...this.availablePackages().map((item) => `Paket ${item.numberOfSessions} termina`),
-    'Pojedinacni termini',
+    'Pojedinačni termini',
   ]);
   protected readonly paymentTypeValues = computed(() => [
     ...this.availablePackages().map((item) => item.purchaseType),
@@ -132,17 +132,17 @@ export class AddPaymentDialog implements OnInit {
     const paymentDate = this.isEdit ? this.data.payment!.paymentDate : new Date().toISOString();
 
     if (!this.isEdit && this.isSingleSessions() && (!value.numberOfSessions || Number(value.numberOfSessions) <= 0)) {
-      this.sharedService.toast.set({ show: true, title: 'Neispravan unos', text: 'Broj termina mora biti veci od nule.', type: 'error' });
+      this.sharedService.toast.set({ show: true, title: 'Neispravan unos', text: 'Broj termina mora biti veći od nule.', type: 'error' });
       return;
     }
 
     if (!value.startDate) {
-      this.sharedService.toast.set({ show: true, title: 'Neispravan unos', text: 'Datum pocetka je obavezan.', type: 'error' });
+      this.sharedService.toast.set({ show: true, title: 'Neispravan unos', text: 'Datum početka je obavezan.', type: 'error' });
       return;
     }
 
     if (!this.isEdit && !this.isSingleSessions() && !this.availablePackages().some((item) => item.purchaseType === value.paymentType)) {
-      this.sharedService.toast.set({ show: true, title: 'Paketi nisu dostupni', text: 'Sacekaj da se ucitaju dostupni paketi pa pokusaj ponovo.', type: 'error' });
+      this.sharedService.toast.set({ show: true, title: 'Paketi nisu dostupni', text: 'Sačekaj da se učitaju dostupni paketi pa pokušaj ponovo.', type: 'error' });
       return;
     }
 

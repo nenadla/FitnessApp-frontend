@@ -16,11 +16,11 @@
 
   <div class="dialog-content p-6 text-neutral-700">
     @if (data.user.userStatus === UserStatus.Unverified) {
-      <p>Korisnik jos nije verifikovan. Mozete ga verifikovati ili blokirati.</p>
+      <p>Korisnik još nije verifikovan. Možete ga verifikovati ili blokirati.</p>
     } @else if (data.user.userStatus === UserStatus.Verified) {
-      <p>Korisnik je verifikovan. Mozete blokirati njegov pristup aplikaciji.</p>
+      <p>Korisnik je verifikovan. Možete blokirati njegov pristup aplikaciji.</p>
     } @else {
-      <p>Korisnik je blokiran. Mozete mu ponovo odobriti pristup aplikaciji.</p>
+      <p>Korisnik je blokiran. Možete mu ponovo odobriti pristup aplikaciji.</p>
     }
   </div>
 

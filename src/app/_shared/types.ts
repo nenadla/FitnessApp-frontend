@@ -1039,10 +1039,9 @@ export interface UpdateProfileRequest {
 export interface ChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
+  confirmPassword: string;
 }
 
 export interface UpdateProfileFormModel extends UpdateProfileRequest {}
 
-export interface ChangePasswordFormModel extends ChangePasswordRequest {
-  confirmPassword: string;
-}
+export interface ChangePasswordFormModel extends ChangePasswordRequest {}
