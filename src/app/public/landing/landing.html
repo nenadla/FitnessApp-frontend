@@ -68,44 +68,48 @@
       } @else if (packages().length) {
         <div class="mt-7 grid gap-4 lg:grid-cols-3">
           @for (packageItem of packages(); track packageItem.purchaseType) {
-            <article class="flex h-full flex-col rounded-2xl border border-border bg-white p-5 shadow-sm shadow-black/5">
+            <article
+              class="flex h-full flex-col rounded-2xl border p-5 shadow-sm shadow-black/5"
+              [class.border-purple-200]="packageItem.purchaseType === PurchaseType.Package12"
+              [class.bg-purple-50]="packageItem.purchaseType === PurchaseType.Package12"
+              [class.border-emerald-200]="packageItem.purchaseType === PurchaseType.Package6"
+              [class.bg-emerald-50]="packageItem.purchaseType === PurchaseType.Package6"
+              [class.border-rose-200]="packageItem.purchaseType === PurchaseType.SingleSessions"
+              [class.bg-rose-50]="packageItem.purchaseType === PurchaseType.SingleSessions"
+              [class.border-border]="packageItem.purchaseType !== PurchaseType.Package12 && packageItem.purchaseType !== PurchaseType.Package6 && packageItem.purchaseType !== PurchaseType.SingleSessions"
+              [class.bg-white]="packageItem.purchaseType !== PurchaseType.Package12 && packageItem.purchaseType !== PurchaseType.Package6 && packageItem.purchaseType !== PurchaseType.SingleSessions"
+            >
               <div class="flex items-start justify-between gap-3">
                 <div class="min-w-0">
-                  <h3 class="mt-3 text-sm font-semibold text-text_primary">{{ packageItem.title }}</h3>
+                  <h3 class="text-lg font-bold text-text_primary">{{ packageItem.title }}</h3>
                   <p class="mt-1 text-xs leading-5 text-light">{{ packageItem.subtitle }}</p>
                 </div>
                 <div class="shrink-0 text-right">
-                  <span class="block text-4xl font-black text-primary">{{ packageItem.numberOfSessions }}</span>
-                  <span class="text-xs text-light">termina</span>
+                  <span
+                    class="block text-4xl font-black text-primary"
+                    [class.text-purple-600]="packageItem.purchaseType === PurchaseType.Package12"
+                    [class.text-emerald-600]="packageItem.purchaseType === PurchaseType.Package6"
+                    [class.text-rose-500]="packageItem.purchaseType === PurchaseType.SingleSessions"
+                  >{{ packageItem.numberOfSessions }}</span>
+                  <span class="text-xs text-light">
+                    {{ packageItem.purchaseType === PurchaseType.SingleSessions ? 'grupni trening' : 'grupnih treninga' }}
+                  </span>
                 </div>
               </div>
 
-              <p class="mt-4 text-sm leading-6 text-text_primary">{{ packageItem.description }}</p>
-
-              <ul class="mt-4 grid gap-1.5 text-xs leading-5 text-light">
-                @for (feature of packageItem.features; track feature) {
-                  <li class="flex gap-2">
-                    <span class="mt-1 size-1.5 shrink-0 rounded-full bg-primary"></span>
-                    <span>{{ feature }}</span>
-                  </li>
-                }
-              </ul>
+              <p class="mt-5 text-sm leading-6 text-text_primary">{{ packageItem.learnMoreDescription }}</p>
 
               @if (expandedPackage() === packageItem.purchaseType) {
-                <div class="mt-5 rounded-2xl border border-primary/10 bg-[linear-gradient(180deg,#faf7ff,#fff)] p-4">
-                  <p class="text-sm font-semibold text-text_primary">Detalji paketa</p>
-                  <p class="mt-2 text-sm leading-6 text-light">{{ packageItem.learnMoreDescription }}</p>
-                  <div class="mt-4 grid gap-2 text-xs leading-6 text-light">
-                    @for (detail of packageItem.details; track detail) {
-                      <p class="rounded-xl bg-white px-3 py-2 shadow-sm shadow-black/5">{{ detail }}</p>
-                    }
-                  </div>
+                <div class="mt-4 grid gap-2 border-t border-current/10 pt-4 text-sm leading-6 text-light">
+                  @for (detail of packageItem.details; track detail) {
+                    <p>{{ detail }}</p>
+                  }
                 </div>
               }
 
               <div class="mt-auto pt-5">
                 <app-button class="[&_.custom-button]:w-full" color="primary" (onClick)="togglePackageDetails(packageItem.purchaseType)">
-                  {{ expandedPackage() === packageItem.purchaseType ? 'Zatvori' : 'Saznaj više' }}
+                  {{ expandedPackage() === packageItem.purchaseType ? 'Zatvori' : 'Saznaj više →' }}
                 </app-button>
               </div>
             </article>
