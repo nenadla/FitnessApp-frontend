@@ -7,8 +7,8 @@
       <app-text-input label="Email" type="email" autocomplete="email" [field]="form.email" />
       <app-text-input label="Lozinka" type="password" autocomplete="current-password" [field]="form.password" />
 
-      <app-button type="submit" color="primary" [loading]="isSubmitting()">
-        {{ isSubmitting() ? 'Prijava u toku...' : 'Prijavi se' }}
+      <app-button class="justify-self-center" type="submit" color="primary" [loading]="isSubmitting()">
+        Prijavi se
       </app-button>
     </form>
   </mat-card>

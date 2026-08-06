@@ -26,8 +26,8 @@
         <app-text-input label="Lozinka" type="password" [field]="form.password" />
         <app-text-input label="Potvrdi lozinku" type="password" [field]="form.confirmPassword" />
 
-        <app-button type="submit" color="primary" [loading]="isSubmitting()">
-          {{ isSubmitting() ? 'Registracija u toku...' : 'Registruj se' }}
+        <app-button class="justify-self-center" type="submit" color="primary" [loading]="isSubmitting()">
+          Registruj se
         </app-button>
       </form>
     }
