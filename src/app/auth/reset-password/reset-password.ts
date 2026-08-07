@@ -83,7 +83,7 @@ export class ResetPasswordComponent implements OnInit {
       .pipe(
         handle(
           () => {
-            this.successMessage.set('Lozinka je uspesno resetovana. Sada mozes da se prijavis.');
+            this.successMessage.set('Lozinka je uspešno resetovana. Sada možeš da se prijaviš.');
           },
           (loading) => this.isSubmitting.set(loading),
         ),

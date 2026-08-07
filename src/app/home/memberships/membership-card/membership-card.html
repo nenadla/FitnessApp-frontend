@@ -1,0 +1,53 @@
+<article
+  class="rounded-2xl border border-border bg-bg_primary p-4 shadow-sm sm:flex sm:items-center sm:gap-6 sm:p-5"
+  [class.ring-2]="membership().isCurrentlyActive"
+  [class.ring-emerald-300]="membership().isCurrentlyActive"
+>
+  <div class="min-w-0 flex-1">
+    <div class="flex flex-wrap items-center gap-2">
+      <span
+        class="rounded-full px-2 py-1 text-[0.6875rem] font-bold uppercase"
+        [class.bg-emerald-50]="membership().isCurrentlyActive"
+        [class.text-emerald-700]="membership().isCurrentlyActive"
+        [class.bg-slate-100]="!membership().isCurrentlyActive"
+        [class.text-slate-600]="!membership().isCurrentlyActive"
+      >
+        {{ membership().isCurrentlyActive ? 'Aktivna' : 'Istekla' }}
+      </span>
+      <span class="rounded-full bg-primary/10 px-2 py-1 text-[0.6875rem] font-bold uppercase text-primary">
+        {{ purchaseTypeLabels[membership().purchaseType] || membership().packageName }}
+      </span>
+    </div>
+
+    <h2 class="mt-3 text-lg font-semibold text-text_primary">{{ membership().packageName }}</h2>
+
+    <div class="mt-3 grid gap-2 text-sm text-light sm:grid-cols-2">
+      <span class="flex items-center gap-2">
+        <app-icon icon="calendar" class="size-4 stroke-primary" />
+        Početak: {{ membership().startDate | date: 'dd.MM.yyyy.' }}
+      </span>
+      <span class="flex items-center gap-2">
+        <app-icon icon="calendar-check" class="size-4 stroke-primary" />
+        Ističe: {{ membership().endDate | date: 'dd.MM.yyyy.' }}
+      </span>
+      <span class="flex items-center gap-2">
+        <app-icon icon="dollar" class="size-4 stroke-primary" />
+        Plaćeno: {{ membership().paymentDate | date: 'dd.MM.yyyy. HH:mm' }}
+      </span>
+      <span class="flex items-center gap-2">
+        <app-icon icon="star" class="size-4 stroke-primary" />
+        Paket: {{ purchaseTypeLabels[membership().purchaseType] || membership().packageName }}
+      </span>
+    </div>
+  </div>
+
+  <div class="mt-5 flex items-center gap-3 border-t border-border pt-4 sm:mt-0 sm:w-48 sm:flex-col sm:items-stretch sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0">
+    <div class="flex-1 text-sm sm:text-center">
+      <span class="font-semibold text-primary">{{ membership().remainingSessions }}</span>
+      <span class="ml-1 text-light">od {{ membership().totalSessions }} termina</span>
+    </div>
+    <div class="rounded-2xl bg-neutral-50 px-3 py-2 text-center text-xs font-semibold uppercase tracking-wide text-neutral-600">
+      {{ membership().isCurrentlyActive ? 'Trenutno u toku' : 'Arhivirana članarina' }}
+    </div>
+  </div>
+</article>

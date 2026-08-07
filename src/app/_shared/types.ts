@@ -918,6 +918,18 @@ export enum PurchaseType {
   Package16 = 4,
 }
 
+export interface MembershipHistoryResponse {
+  id: string;
+  purchaseType: PurchaseType;
+  packageName: string;
+  startDate: string;
+  paymentDate: string;
+  endDate: string;
+  totalSessions: number;
+  remainingSessions: number;
+  isCurrentlyActive: boolean;
+}
+
 export interface PaymentResponse {
   id: string;
   userId: string;

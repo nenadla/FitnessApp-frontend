@@ -9,6 +9,7 @@ export const Pages = {
   Register: '/register',
   ForgotPassword: '/forgot-password',
   ResetPassword: '/reset-password',
+  Memberships: '/home/memberships',
   Home: '/home',
   Dashboard: '/home/dashboard',
   Trainings: '/home/trainings',
@@ -25,7 +26,8 @@ export const Titles = {
   Register: 'Registracija',
   ForgotPassword: 'Zaboravljena lozinka',
   ResetPassword: 'Resetovanje lozinke',
-  Home: 'Pocetna',
+  Memberships: 'Članarina',
+  Home: 'Početna',
   Dashboard: 'Dashboard',
   Trainings: 'Treninzi',
   AdminReservations: 'Rezervacije',
@@ -59,7 +61,7 @@ export const NotificationTypeLabels: Record<NotificationType, string> = {
   [NotificationType.General]: 'Opste',
   [NotificationType.TrainingCancelled]: 'Trening otkazan',
   [NotificationType.TrainingUpdated]: 'Trening izmenjen',
-  [NotificationType.MembershipExpiring]: 'Clanarina istice',
+  [NotificationType.MembershipExpiring]: 'Članarina ističe',
   [NotificationType.System]: 'Sistemska',
 };
 

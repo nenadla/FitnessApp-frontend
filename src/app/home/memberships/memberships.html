@@ -1,0 +1,24 @@
+<section class="px-1 py-3 sm:p-6" aria-label="Članarine">
+  <div class="mb-6">
+    <div class="mb-4">
+      <h1 class="m-0 text-2xl font-semibold text-neutral-900">Članarina</h1>
+      <p class="mt-1 text-sm text-neutral-500">Pregled svih kupljenih paketa i istorije članarina.</p>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="grid min-h-48 place-items-center rounded-2xl border border-border bg-bg_primary">
+      <div class="size-8 animate-spin rounded-full border-[3px] border-primary border-t-transparent"></div>
+    </div>
+  } @else if (hasAnyMemberships()) {
+    <div class="flex flex-col gap-4">
+      @for (membership of memberships(); track membership.id) {
+        <app-membership-card [membership]="membership" />
+      }
+    </div>
+  } @else {
+    <div class="rounded-2xl border border-border bg-bg_primary px-4 py-14 text-center text-sm text-light">
+      Nema članarina za prikaz.
+    </div>
+  }
+</section>

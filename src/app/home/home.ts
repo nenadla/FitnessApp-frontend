@@ -51,6 +51,12 @@ export const homeRoutes: Routes = [
         loadComponent: () => import('./trainings/trainings').then((component) => component.TrainingsComponent),
       },
       {
+        path: 'memberships',
+        canActivate: [roleGuard],
+        data: { roles: ['Korisnik'] },
+        loadComponent: () => import('./memberships/memberships').then((component) => component.MembershipsComponent),
+      },
+      {
         path: 'notifications',
         loadComponent: () => import('./notifications/notifications').then((component) => component.NotificationsComponent),
       },

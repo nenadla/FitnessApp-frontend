@@ -24,6 +24,7 @@ export class SidebarComponent {
     { label: 'Dashboard', link: '/home/dashboard', icon: 'home', roles: ['Korisnik'] },
     { label: 'Korisnici', link: '/home/admin/users', icon: 'users', roles: ['Admin'] },
     { label: 'Treninzi', link: '/home/trainings', icon: 'calendar' },
+    { label: 'Članarina', link: '/home/memberships', icon: 'star', roles: ['Korisnik'] },
     { label: 'Rezervacije', link: '/home/admin/reservations', icon: 'groups', roles: ['Admin'] },
     { label: 'Profil', link: '/home/profile', icon: 'user', roles: ['Korisnik'] },
     { label: 'Uplate', link: '/home/admin/payments', icon: 'dollar', roles: ['Admin'] },
