@@ -7,6 +7,8 @@ export const Pages = {
   Landing: '/',
   Login: '/login',
   Register: '/register',
+  ForgotPassword: '/forgot-password',
+  ResetPassword: '/reset-password',
   Home: '/home',
   Dashboard: '/home/dashboard',
   Trainings: '/home/trainings',
@@ -21,7 +23,9 @@ export const Titles = {
   Landing: 'Retro Fitness',
   Login: 'Prijava',
   Register: 'Registracija',
-  Home: 'Početna',
+  ForgotPassword: 'Zaboravljena lozinka',
+  ResetPassword: 'Resetovanje lozinke',
+  Home: 'Pocetna',
   Dashboard: 'Dashboard',
   Trainings: 'Treninzi',
   AdminReservations: 'Rezervacije',
@@ -47,7 +51,7 @@ export const UserStatusLabels: Record<UserStatus, string> = {
 export const PurchaseTypeLabels: Record<PurchaseType, string> = {
   [PurchaseType.Package12]: 'Paket 12 termina',
   [PurchaseType.Package6]: 'Paket 6 termina',
-  [PurchaseType.SingleSessions]: 'Pojedinačni termini',
+  [PurchaseType.SingleSessions]: 'Pojedinacni termini',
   [PurchaseType.Package16]: 'Paket 16 termina',
 };
 
@@ -55,7 +59,7 @@ export const NotificationTypeLabels: Record<NotificationType, string> = {
   [NotificationType.General]: 'Opste',
   [NotificationType.TrainingCancelled]: 'Trening otkazan',
   [NotificationType.TrainingUpdated]: 'Trening izmenjen',
-  [NotificationType.MembershipExpiring]: 'Članarina ističe',
+  [NotificationType.MembershipExpiring]: 'Clanarina istice',
   [NotificationType.System]: 'Sistemska',
 };
 

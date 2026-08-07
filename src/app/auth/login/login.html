@@ -7,6 +7,10 @@
       <app-text-input label="Email" type="email" autocomplete="email" [field]="form.email" />
       <app-text-input label="Lozinka" type="password" autocomplete="current-password" [field]="form.password" />
 
+      <a class="justify-self-start text-sm font-medium text-blue-700 hover:underline" routerLink="/forgot-password">
+        Zaboravio si lozinku?
+      </a>
+
       <app-button class="justify-self-center" type="submit" color="primary" [loading]="isSubmitting()">
         Prijavi se
       </app-button>

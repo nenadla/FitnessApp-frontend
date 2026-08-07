@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { email, form, minLength, required } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { Button } from '../../_components/button/button';
 import { DateInput } from '../../_form-inputs/date-input/date-input';
+import { Pages, Titles } from '../../_shared/constants';
 import { handle } from '../../_shared/http-handler';
 import { RegisterFormModel } from '../../_shared/types';
 import { TextInputComponent } from '../../_form-inputs/text-input/text-input';
 import { AuthService } from '../../_services/auth.service';
+import { SharedService } from '../../_services/shared.service';
 
 @Component({
   selector: 'app-register',
@@ -14,8 +16,9 @@ import { AuthService } from '../../_services/auth.service';
   templateUrl: './register.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   private readonly authService = inject(AuthService);
+  private readonly sharedService = inject(SharedService);
 
   protected readonly isSubmitting = signal(false);
   protected readonly errorMessage = signal('');
@@ -42,6 +45,11 @@ export class RegisterComponent {
     required(path.confirmPassword, { message: 'Potvrda lozinke je obavezna.' });
   });
 
+  ngOnInit(): void {
+    this.sharedService.setTitle(Titles.Register);
+    this.sharedService.page.set(Pages.Register);
+  }
+
   protected submit(event: SubmitEvent): void {
     event.preventDefault();
 
@@ -65,7 +73,7 @@ export class RegisterComponent {
       .pipe(
         handle(
           () => {
-            this.successMessage.set('Registracija je uspešna. Sačekaj verifikaciju naloga od administratora.');
+            this.successMessage.set('Registracija je uspesna. Sacekaj verifikaciju naloga od administratora.');
           },
           (loading) => this.isSubmitting.set(loading),
         ),

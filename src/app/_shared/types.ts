@@ -672,6 +672,24 @@ export interface LoginRequest {
 
 export interface LoginFormModel extends LoginRequest {}
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordFormModel extends ForgotPasswordRequest {}
+
+export interface ResetPasswordRequest {
+  email: string;
+  resetToken: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ResetPasswordFormModel {
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export interface RegisterFormModel extends Omit<RegisterRequest, 'dateOfBirth'> {
   confirmPassword: string;
   dateOfBirth: Date | null;

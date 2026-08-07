@@ -5,11 +5,13 @@ import { environment } from '../../environments/environment';
 import {
   ApiResponse,
   AuthResponse,
+  ForgotPasswordRequest,
   CurrentUserResponse,
   LoginRequest,
   RefreshTokenRequest,
   RegisterRequest,
   RevokeTokenRequest,
+  ResetPasswordRequest,
   UserProfile,
   UserStatus,
 } from '../_shared/types';
@@ -33,6 +35,14 @@ export class AuthService {
     return this.http
       .post<ApiResponse<AuthResponse>>(`${this.authUrl}/login`, request)
       .pipe(map((response) => this.storeSession(response.data)));
+  }
+
+  forgotPassword(request: ForgotPasswordRequest) {
+    return this.http.post<ApiResponse<unknown>>(`${this.authUrl}/forgot-password`, request);
+  }
+
+  resetPassword(request: ResetPasswordRequest) {
+    return this.http.post<ApiResponse<unknown>>(`${this.authUrl}/reset-password`, request);
   }
 
   refreshSession() {
