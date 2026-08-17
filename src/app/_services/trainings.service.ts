@@ -7,8 +7,6 @@ import {
   EmptyResponse,
   TrainingCalendarResponse,
   TrainingListRequest,
-  TrainingSessionResponse,
-  UpdateTrainingSessionRequest,
 } from '../_shared/types';
 
 @Injectable({ providedIn: 'root' })
@@ -35,15 +33,7 @@ export class TrainingsService {
   }
 
   create(request: CreateTrainingSessionRequest) {
-    return this.http.post<ApiResponse<TrainingSessionResponse>>(`${environment.apiUrl}/api/admin/trainings`, request);
-  }
-
-  getById(id: string) {
-    return this.http.get<ApiResponse<TrainingSessionResponse>>(`${this.trainingsUrl}/${id}`);
-  }
-
-  update(id: string, request: UpdateTrainingSessionRequest) {
-    return this.http.put<ApiResponse<TrainingSessionResponse>>(`${environment.apiUrl}/api/admin/trainings/${id}`, request);
+    return this.http.post<ApiResponse<EmptyResponse>>(`${environment.apiUrl}/api/admin/trainings`, request);
   }
 
   delete(id: string) {

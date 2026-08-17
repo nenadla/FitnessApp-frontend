@@ -15,7 +15,7 @@ import { Icon } from '../../_components/icon/icon';
 import { TextInputComponent } from '../../_form-inputs/text-input/text-input';
 import { handle } from '../../_shared/http-handler';
 import { formatDateToStringWithDots, getDayOfWeek } from '../../_shared/methods';
-import { ReservationResponse, TrainingCalendarResponse, TrainingDialogData, TrainingDialogResult, TrainingSearchFormModel } from '../../_shared/types';
+import { CreateTrainingSessionRequest, ReservationResponse, TrainingCalendarResponse, TrainingSearchFormModel } from '../../_shared/types';
 import { TrainingsService } from '../../_services/trainings.service';
 import { ReservationsService } from '../../_services/reservations.service';
 import { SharedService } from '../../_services/shared.service';
@@ -42,6 +42,7 @@ import { TrainingCard } from './training-card/training-card';
   ],
   templateUrl: './trainings.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class TrainingsComponent implements AfterViewInit, OnInit {
   private readonly trainingsService = inject(TrainingsService);
@@ -123,15 +124,24 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
     this.loadTrainings();
   }
 
-  protected openAddTrainingDialog(): void {
-    this.openTrainingDialog({ mode: 'create' });
+  protected getTrainingStatusLabel(training: TrainingCalendarResponse): string {
+    if (training.isCancelled) {
+      return 'Otkazan';
+    }
+
+    return this.isTrainingInactive(training) ? 'Neaktivan' : 'Aktivan';
   }
 
-  protected openEditTrainingDialog(training: TrainingCalendarResponse): void {
-    this.trainingsService
-      .getById(training.id)
-      .pipe(handle((response) => this.openTrainingDialog({ mode: 'edit', training: response.data }), (loading) => this.isLoading.set(loading)))
-      .subscribe();
+  protected getTrainingStatusTone(training: TrainingCalendarResponse): 'success' | 'error' | 'primary' {
+    if (training.isCancelled) {
+      return 'error';
+    }
+
+    return this.isTrainingInactive(training) ? 'primary' : 'success';
+  }
+
+  protected openAddTrainingDialog(): void {
+    this.openTrainingDialog();
   }
 
   protected openTrainingReservationsDialog(training: TrainingCalendarResponse): void {
@@ -192,7 +202,10 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   }
 
   protected canReserveTraining(training: TrainingCalendarResponse): boolean {
-    return !this.reservationsByTrainingId().has(training.id) && !training.isCancelled && training.reservedCount < training.capacity;
+    return !this.reservationsByTrainingId().has(training.id)
+      && !training.isCancelled
+      && !this.isTrainingInactive(training)
+      && training.reservedCount < training.capacity;
   }
 
   protected isTrainingReserved(training: TrainingCalendarResponse): boolean {
@@ -202,6 +215,10 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
   protected reservationTooltip(training: TrainingCalendarResponse): string {
     if (training.isCancelled) {
       return 'Trening je otkazan';
+    }
+
+    if (this.isTrainingInactive(training)) {
+      return 'Trening je neaktivan';
     }
 
     return this.canReserveTraining(training) ? 'Prijavi se na trening' : 'Nema slobodnih mesta';
@@ -234,31 +251,22 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
       });
   }
 
-  private openTrainingDialog(data: TrainingDialogData): void {
+  private openTrainingDialog(): void {
     this.dialog
       .open(AddTrainingDialog, {
         autoFocus: false,
-        data,
         maxWidth: 'calc(100vw - 2rem)',
         width: '44rem',
       })
       .afterClosed()
-      .subscribe((result: TrainingDialogResult) => {
+      .subscribe((result: CreateTrainingSessionRequest | false) => {
         if (!result) {
           return;
         }
 
-        if (result.mode === 'create') {
-          this.trainingsService
-            .create(result.request)
-            .pipe(handle(() => this.completeMutation('Trening je uspešno dodat.'), (loading) => this.isLoading.set(loading)))
-            .subscribe();
-          return;
-        }
-
         this.trainingsService
-          .update(result.id, result.request)
-          .pipe(handle(() => this.completeMutation('Izmene treninga su uspešno sačuvane.'), (loading) => this.isLoading.set(loading)))
+          .create(result)
+          .pipe(handle(() => this.completeMutation('Trening je uspešno dodat.'), (loading) => this.isLoading.set(loading)))
           .subscribe();
       });
   }
@@ -328,5 +336,9 @@ export class TrainingsComponent implements AfterViewInit, OnInit {
 
   private setReservationSubmitting(trainingId: string, isSubmitting: boolean): void {
     this.reservationSubmittingId.set(isSubmitting ? trainingId : null);
+  }
+
+  private isTrainingInactive(training: TrainingCalendarResponse): boolean {
+    return !training.isCancelled && new Date(training.endTime).getTime() <= Date.now();
   }
 }

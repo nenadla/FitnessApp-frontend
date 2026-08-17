@@ -3,14 +3,12 @@
   (submit)="submit($event)"
   cdkDrag
   cdkDragRootElement=".mat-mdc-dialog-container"
-  aria-label="Dodaj ili izmeni trening"
+  aria-label="Dodaj trening"
 >
   <div class="dialog-header cursor-grab" cdkDragHandle>
     <div>
-      <h2 class="m-0 text-xl font-semibold text-neutral-900">{{ isEdit ? 'Izmeni trening' : 'Dodaj trening' }}</h2>
-      <p class="mt-1 text-sm text-neutral-500">
-        {{ isEdit ? 'Izmeni podatke za odabrani trening.' : 'Unesi podatke za novi termin treninga.' }}
-      </p>
+      <h2 class="m-0 text-xl font-semibold text-neutral-900">Novi trening</h2>
+      <p class="mt-1 text-sm text-neutral-500">Unesi podatke za novi termin treninga.</p>
     </div>
 
     <app-button-icon class="ml-auto" color="transparent" tooltip="Zatvori" (onClick)="close()">
@@ -27,12 +25,10 @@
     <app-time-input label="Početak" [field]="form.startTime" />
     <app-time-input label="Kraj" [field]="form.endTime" />
     <app-text-input label="Kapacitet" type="number" [field]="form.capacity" />
-    @if (!isEdit) {
-      <app-text-input label="Trener" type="text" [field]="form.trainerName" />
-      <div class="sm:col-span-2">
-        <app-text-input label="Lokacija" type="text" [field]="form.location" />
-      </div>
-    }
+    <app-text-input label="Trener" type="text" [field]="form.trainerName" />
+    <div class="sm:col-span-2">
+      <app-text-input label="Lokacija" type="text" [field]="form.location" />
+    </div>
     <div class="sm:col-span-2">
       <app-textarea-input label="Opis" [field]="form.description" />
     </div>
@@ -40,6 +36,6 @@
 
   <div class="dialog-footer">
     <app-button (onClick)="close()">Odustani</app-button>
-    <app-button type="submit" color="primary">{{ isEdit ? 'Sačuvaj izmene' : 'Sačuvaj trening' }}</app-button>
+    <app-button type="submit" color="primary">Sačuvaj trening</app-button>
   </div>
 </form>

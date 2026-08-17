@@ -21,7 +21,7 @@ export class SidebarComponent {
   protected readonly isNavigationExpanded = computed(() => this.isExpanded() || this.mobileOpen());
 
   private readonly navigationItems: NavigationItem[] = [
-    { label: 'Dashboard', link: '/home/dashboard', icon: 'home', roles: ['Korisnik'] },
+    { label: 'Početna', link: '/home/dashboard', icon: 'home', roles: ['Korisnik'] },
     { label: 'Korisnici', link: '/home/admin/users', icon: 'users', roles: ['Admin'] },
     { label: 'Treninzi', link: '/home/trainings', icon: 'calendar' },
     { label: 'Članarina', link: '/home/memberships', icon: 'dollar', roles: ['Korisnik'] },

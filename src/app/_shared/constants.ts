@@ -28,7 +28,7 @@ export const Titles = {
   ResetPassword: 'Resetovanje lozinke',
   Memberships: 'Članarina',
   Home: 'Početna',
-  Dashboard: 'Dashboard',
+  Dashboard: 'Početna',
   Trainings: 'Treninzi',
   AdminReservations: 'Rezervacije',
   Profile: 'Profil',

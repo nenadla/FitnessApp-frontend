@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { AreYouSureDialog } from '../../../_components/are-you-sure-dialog/are-you-sure-dialog';
 import { Button } from '../../../_components/button/button';
 import { ButtonIcon } from '../../../_components/button-icon/button-icon';
 import { Icon } from '../../../_components/icon/icon';
@@ -29,7 +28,7 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly sort = viewChild.required(MatSort);
 
-  protected readonly displayedColumns = ['name', 'email', 'phoneNumber', 'status', 'createdAt', 'verifiedAt', 'actions'];
+  protected readonly displayedColumns = ['name', 'email', 'phoneNumber', 'status', 'createdAt', 'verifiedAt'];
   protected readonly dataSource = new MatTableDataSource<UserListResponse>([]);
   protected readonly mobileUsers = signal<UserListResponse[]>([]);
   protected readonly isLoading = signal(false);
@@ -105,13 +104,6 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
 
         this.updateUserStatus(user, action);
       });
-  }
-
-  protected deleteUser(user: UserListResponse): void {
-    this.dialog.open(AreYouSureDialog, {
-      autoFocus: false,
-      data: `Da li želiš da obrišeš korisnika ${user.fullName}?`,
-    });
   }
 
   private updateUserStatus(user: UserListResponse, action: UserStatusAction): void {

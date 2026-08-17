@@ -1,10 +1,20 @@
 <article class="rounded-2xl border border-border bg-bg_primary p-4 shadow-sm sm:flex sm:items-center sm:gap-6 sm:p-5">
   <div class="min-w-0 flex-1">
     <div class="flex flex-wrap items-center gap-2">
-      <span class="rounded-full px-2 py-1 text-[0.6875rem] font-bold uppercase" [class.bg-red-50]="training().isCancelled" [class.text-red-600]="training().isCancelled" [class.bg-emerald-50]="!training().isCancelled" [class.text-emerald-700]="!training().isCancelled">
-        {{ training().isCancelled ? 'Otkazan' : 'Dostupan' }}
+      <span
+        class="rounded-full px-2 py-1 text-[0.6875rem] font-bold uppercase"
+        [class.bg-red-50]="training().isCancelled"
+        [class.text-red-600]="training().isCancelled"
+        [class.bg-purple-100]="!training().isCancelled && isInactive()"
+        [class.text-purple-700]="!training().isCancelled && isInactive()"
+        [class.bg-emerald-50]="!training().isCancelled && !isInactive()"
+        [class.text-emerald-700]="!training().isCancelled && !isInactive()"
+      >
+        {{ getStatusLabel() }}
       </span>
-      @if (isReserved()) { <span class="rounded-full bg-purple-100 px-2 py-1 text-[0.6875rem] font-bold uppercase text-purple-700">Rezervisano</span> }
+      @if (isReserved()) {
+        <span class="rounded-full bg-purple-100 px-2 py-1 text-[0.6875rem] font-bold uppercase text-purple-700">Rezervisano</span>
+      }
     </div>
     <h2 class="mt-3 text-lg font-semibold text-text_primary">{{ training().title }}</h2>
     <div class="mt-3 grid gap-2 text-sm text-light sm:grid-cols-2">
@@ -20,7 +30,9 @@
     @if (isReserved()) {
       <app-button class="[&_.custom-button]:w-full" color="light" [loading]="isSubmitting()" (onClick)="cancel.emit()">Otkaži rezervaciju</app-button>
     } @else {
-      <app-button class="[&_.custom-button]:w-full" color="primary" [disabled]="!canReserve()" [loading]="isSubmitting()" (onClick)="reserve.emit()">Rezerviši</app-button>
+      <app-button class="[&_.custom-button]:w-full" color="primary" [disabled]="!canReserve()" [loading]="isSubmitting()" (onClick)="reserve.emit()">
+        {{ isInactive() ? 'Neaktivan' : 'Rezerviši' }}
+      </app-button>
     }
   </div>
 </article>

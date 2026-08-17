@@ -759,16 +759,6 @@ export interface CreateTrainingSessionRequest {
   location?: string | null;
 }
 
-export interface UpdateTrainingSessionRequest {
-  title: string;
-  description?: string | null;
-  startTime: string;
-  endTime: string;
-  capacity: number;
-  isCancelled: boolean;
-  cancellationReason?: string | null;
-}
-
 export interface CreateTrainingSessionFormModel {
   title: string;
   description: string | null;
@@ -779,19 +769,6 @@ export interface CreateTrainingSessionFormModel {
   trainerName: string | null;
   location: string | null;
 }
-
-export type TrainingDialogMode = 'create' | 'edit';
-
-export interface TrainingDialogData {
-  mode: TrainingDialogMode;
-  training?: TrainingSessionResponse;
-}
-
-export type TrainingDialogResult =
-  | { mode: 'create'; request: CreateTrainingSessionRequest }
-  | { mode: 'edit'; id: string; request: UpdateTrainingSessionRequest }
-  | false
-  | undefined;
 
 export interface TrainingSearchFormModel {
   search: string;

@@ -92,6 +92,22 @@ export class NotificationsComponent implements OnInit {
     return details;
   }
 
+  protected getNotificationStatusLabel(notification: NotificationResponse): string {
+    if (notification.isRead) {
+      return 'Procitano';
+    }
+
+    return this.isNotificationStaro(notification) ? 'Starije' : 'Novo';
+  }
+
+  protected isNotificationStaro(notification: NotificationResponse): boolean {
+    if (notification.isRead) {
+      return false;
+    }
+
+    return Date.now() - new Date(notification.createdAt).getTime() >= 2 * 24 * 60 * 60 * 1000;
+  }
+
   protected openDetails(notification: NotificationResponse): void {
     this.dialog.open(NotificationDetailDialog, {
       autoFocus: false,

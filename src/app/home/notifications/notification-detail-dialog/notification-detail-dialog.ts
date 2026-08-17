@@ -18,4 +18,20 @@ export class NotificationDetailDialog {
   protected readonly dialogRef = inject(MatDialogRef<NotificationDetailDialog>);
   protected readonly data = inject<NotificationDetailDialogData>(MAT_DIALOG_DATA);
   protected readonly typeLabels = NotificationTypeLabels;
+
+  protected getStatusLabel(): string {
+    if (this.data.notification.isRead) {
+      return 'Procitano';
+    }
+
+    return this.isStaro() ? 'Starije' : 'Novo';
+  }
+
+  protected isStaro(): boolean {
+    if (this.data.notification.isRead) {
+      return false;
+    }
+
+    return Date.now() - new Date(this.data.notification.createdAt).getTime() >= 2 * 24 * 60 * 60 * 1000;
+  }
 }

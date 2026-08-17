@@ -10,6 +10,7 @@ import { TrainingCalendarResponse } from '../../../_shared/types';
   imports: [Button, DatePipe, Icon],
   templateUrl: './training-card.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class TrainingCard {
   training = input.required<TrainingCalendarResponse>();
@@ -20,4 +21,16 @@ export class TrainingCard {
   cancel = output<void>();
 
   protected readonly getDayOfWeek = getDayOfWeek;
+
+  protected getStatusLabel(): string {
+    if (this.training().isCancelled) {
+      return 'Otkazan';
+    }
+
+    return this.isInactive() ? 'Neaktivan' : 'Dostupan';
+  }
+
+  protected isInactive(): boolean {
+    return !this.training().isCancelled && new Date(this.training().endTime).getTime() <= Date.now();
+  }
 }

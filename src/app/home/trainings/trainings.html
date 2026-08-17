@@ -17,14 +17,14 @@
       </div>
 
       @if (isAdmin()) {
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div class="flex flex-wrap items-center gap-3">
           <mat-checkbox [checked]="activeOnly()" (change)="changeActiveOnly($event.checked)">
             Aktivni treninzi
           </mat-checkbox>
 
-          <app-button class="[&_.custom-button]:!hidden sm:[&_.custom-button]:!block [&_.custom-button]:!h-12" color="primary" (onClick)="openAddTrainingDialog()">
+          <app-button color="primary" (onClick)="openAddTrainingDialog()">
             <app-icon icon="add" class="mr-1 size-4 stroke-current" />
-            Dodaj trening
+            Novi trening
           </app-button>
         </div>
       }
@@ -54,14 +54,11 @@
         <app-mobile-data-card
           [title]="training.title"
           [subtitle]="getDayOfWeek(training.startTime) + ' ' + (training.startTime | date: 'dd.MM.yyyy.')"
-          [status]="training.isCancelled ? 'Otkazan' : 'Aktivan'"
-          [statusTone]="training.isCancelled ? 'error' : 'success'"
+          [status]="getTrainingStatusLabel(training)"
+          [statusTone]="getTrainingStatusTone(training)"
           [details]="trainingDetails(training)"
           (detailClick)="openTrainingReservationsDialog(training)"
         >
-          <app-button-icon color="transparent" size="small" tooltip="Izmeni trening" (onClick)="openEditTrainingDialog(training)">
-            <app-icon icon="edit" class="size-4 stroke-current" />
-          </app-button-icon>
           <app-button-icon color="transparent" size="small" tooltip="Obriši trening" (onClick)="confirmDeleteTraining(training)">
             <app-icon icon="delete" class="size-4 fill-red-500" />
           </app-button-icon>
@@ -123,8 +120,12 @@
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
         <td mat-cell *matCellDef="let training">
-          <span class="retro-table-status" [class.retro-table-status-cancelled]="training.isCancelled">
-            {{ training.isCancelled ? 'Otkazan' : 'Aktivan' }}
+          <span
+            class="retro-table-status"
+            [class.retro-table-status-cancelled]="training.isCancelled"
+            [class.retro-table-status-inactive]="!training.isCancelled && getTrainingStatusLabel(training) === 'Neaktivan'"
+          >
+            {{ getTrainingStatusLabel(training) }}
           </span>
         </td>
       </ng-container>
@@ -134,9 +135,6 @@
         <td mat-cell *matCellDef="let training" class="retro-table-actions">
           <div class="flex justify-center gap-1">
             @if (isAdmin()) {
-              <app-button-icon color="transparent" size="small" tooltip="Izmeni trening" (onClick)="openEditTrainingDialog(training)">
-                <app-icon icon="edit" class="size-4 stroke-current" />
-              </app-button-icon>
               <app-button-icon color="transparent" size="small" tooltip="Obriši trening" (onClick)="confirmDeleteTraining(training)">
                 <app-icon icon="delete" class="size-4 fill-red-500" />
               </app-button-icon>

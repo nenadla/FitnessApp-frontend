@@ -18,9 +18,6 @@
           <app-button-icon color="transparent" size="small" tooltip="Promeni status" (onClick)="openStatusDialog(user)">
             <app-icon icon="edit" class="size-4 stroke-current" />
           </app-button-icon>
-          <app-button-icon color="transparent" size="small" tooltip="Obriši korisnika" (onClick)="deleteUser(user)">
-            <app-icon icon="delete" class="size-4 fill-red-500" />
-          </app-button-icon>
         </app-mobile-data-card>
       } @empty {
         <div class="rounded-2xl border border-border bg-bg_primary px-4 py-14 text-center text-sm text-light">
@@ -81,18 +78,6 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Verifikovan</th>
         <td mat-cell *matCellDef="let user">{{ user.verifiedAt ? (user.verifiedAt | date: 'dd.MM.yyyy. HH:mm') : '-' }}</td>
       </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Akcije</th>
-        <td mat-cell *matCellDef="let user" class="retro-table-actions">
-          <div class="flex justify-center gap-1">
-            <app-button-icon color="transparent" size="small" tooltip="Obriši korisnika" (onClick)="deleteUser(user)">
-              <app-icon icon="delete" class="size-4 fill-red-500" />
-            </app-button-icon>
-          </div>
-        </td>
-      </ng-container>
-
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr class="mat-mdc-row" *matNoDataRow>
