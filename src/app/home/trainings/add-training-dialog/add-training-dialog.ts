@@ -26,7 +26,7 @@ export class AddTrainingDialog {
     date: null,
     startTime: '',
     endTime: '',
-    capacity: 10,
+    capacity: 15,
     trainerName: 'Sara',
     location: 'Retro Fitness Studio',
   });
