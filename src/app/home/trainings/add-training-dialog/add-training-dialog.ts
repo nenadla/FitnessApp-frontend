@@ -21,7 +21,7 @@ export class AddTrainingDialog {
   private readonly dialogRef = inject(MatDialogRef<AddTrainingDialog, CreateTrainingSessionRequest | false>);
 
   protected readonly model = signal<CreateTrainingSessionFormModel>({
-    title: 'Full Body Fitness',
+    title: 'Aerobik',
     description: null,
     date: null,
     startTime: '',
