@@ -1,5 +1,4 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, inject, signal, viewChild } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -8,17 +7,16 @@ import { Button } from '../../../_components/button/button';
 import { ButtonIcon } from '../../../_components/button-icon/button-icon';
 import { Icon } from '../../../_components/icon/icon';
 import { MobileDataCard } from '../../../_components/mobile-data-card/mobile-data-card';
-import { Pages, Titles, UserStatusLabels } from '../../../_shared/constants';
+import { Pages, PurchaseTypeLabels, Titles, UserStatusLabels } from '../../../_shared/constants';
 import { handle } from '../../../_shared/http-handler';
-import { dateTimeValueFormatter } from '../../../_shared/methods';
-import { MobileDataCardStatusTone, UserListResponse, UserStatus, UserStatusAction } from '../../../_shared/types';
+import { MobileDataCardStatusTone, PurchaseType, UserListResponse, UserStatus, UserStatusAction } from '../../../_shared/types';
 import { SharedService } from '../../../_services/shared.service';
 import { UsersService } from '../../../_services/users.service';
 import { UserStatusDialog } from './user-status-dialog/user-status-dialog';
 
 @Component({
   selector: 'app-admin-users',
-  imports: [Button, ButtonIcon, DatePipe, Icon, MatPaginatorModule, MatSortModule, MatTableModule, MobileDataCard],
+  imports: [Button, ButtonIcon, Icon, MatPaginatorModule, MatSortModule, MatTableModule, MobileDataCard],
   templateUrl: './users.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,7 +26,7 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly sort = viewChild.required(MatSort);
 
-  protected readonly displayedColumns = ['name', 'email', 'phoneNumber', 'status', 'createdAt', 'verifiedAt'];
+  protected readonly displayedColumns = ['name', 'email', 'phoneNumber', 'status', 'package', 'remainingSessions'];
   protected readonly dataSource = new MatTableDataSource<UserListResponse>([]);
   protected readonly mobileUsers = signal<UserListResponse[]>([]);
   protected readonly isLoading = signal(false);
@@ -39,11 +37,13 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
   protected readonly mobilePage = signal(1);
   protected readonly mobileHasNextPage = signal(false);
   protected readonly userStatusLabels = UserStatusLabels;
+  protected readonly purchaseTypeLabels = PurchaseTypeLabels;
   protected readonly UserStatus = UserStatus;
 
   ngOnInit(): void {
     this.sharedService.setTitle(Titles.AdminUsers);
     this.sharedService.page.set(Pages.AdminUsers);
+    this.dataSource.sortingDataAccessor = (user, property) => this.sortValue(user, property);
     this.loadUsers();
   }
 
@@ -79,12 +79,26 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
     return status === UserStatus.Unverified ? 'primary' : 'success';
   }
 
+  protected getPackageLabel(user: UserListResponse): string {
+    const purchaseType = user.activePackage?.purchaseType;
+
+    if (!purchaseType) {
+      return '-';
+    }
+
+    return this.purchaseTypeLabels[purchaseType as PurchaseType] ?? '-';
+  }
+
+  protected getRemainingSessions(user: UserListResponse): number | string {
+    return user.activePackage?.remainingSessions ?? user.totalRemainingSessions ?? '-';
+  }
+
   protected userDetails(user: UserListResponse) {
     return [
       { label: 'Email', value: user.email },
       { label: 'Telefon', value: user.phoneNumber || '-' },
-      { label: 'Registrovan', value: dateTimeValueFormatter({ value: user.createdAt }) },
-      { label: 'Verifikovan', value: user.verifiedAt ? dateTimeValueFormatter({ value: user.verifiedAt }) : '-' },
+      { label: 'Paket', value: this.getPackageLabel(user) },
+      { label: 'Preostali treninzi', value: this.getRemainingSessions(user) },
     ];
   }
 
@@ -129,6 +143,7 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
       .getAll({ page: 1, pageSize: this.pageSize() })
       .pipe(
         handle((response) => {
+          console.log(response);
           this.setTablePage(response.data.items, response.data.page, response.data.pageSize, response.data.totalCount);
           this.mobileUsers.set(response.data.items);
           this.mobilePage.set(response.data.page);
@@ -154,6 +169,25 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
     this.currentPage.set(page);
     this.pageSize.set(pageSize);
     this.paginatorLength.set(totalCount);
+  }
+
+  private sortValue(user: UserListResponse, property: string): string | number {
+    switch (property) {
+      case 'name':
+        return user.fullName;
+      case 'email':
+        return user.email;
+      case 'phoneNumber':
+        return user.phoneNumber ?? '';
+      case 'status':
+        return user.userStatus;
+      case 'package':
+        return user.activePackage?.purchaseType ?? 0;
+      case 'remainingSessions':
+        return user.activePackage?.remainingSessions ?? user.totalRemainingSessions ?? -1;
+      default:
+        return (user as unknown as Record<string, string | number | null | undefined>)[property] ?? '';
+    }
   }
 
   private completeMutation(text: string): void {

@@ -5,6 +5,9 @@ import { MobileDataCardDetail, MobileDataCardStatusTone } from '../../_shared/ty
   selector: 'app-mobile-data-card',
   templateUrl: './mobile-data-card.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'block w-full',
+  },
 })
 export class MobileDataCard {
   title = input.required<string>();

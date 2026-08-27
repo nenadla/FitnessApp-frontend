@@ -815,6 +815,22 @@ export interface DashboardActiveMembershipResponse {
   status: string;
 }
 
+export interface UserActivePackageResponse {
+  id: string;
+  userId: string;
+  purchaseType: PurchaseType;
+  totalSessions: number;
+  remainingSessions: number;
+  carriedOverSessions: number;
+  startDate: string;
+  endDate: string;
+  createdAt: string;
+  isActive: boolean;
+  isExpired: boolean;
+  notes?: string | null;
+  expirationReminderSentAt?: string | null;
+}
+
 export interface DashboardUpcomingReservationResponse {
   trainingSessionId: string;
   trainingTitle: string;
@@ -861,6 +877,8 @@ export interface UserListResponse {
   email: string;
   phoneNumber?: string | null;
   userStatus: UserStatus;
+  activePackage?: UserActivePackageResponse | null;
+  totalRemainingSessions: number;
   verifiedAt?: string | null;
   blockedAt?: string | null;
   unblockedAt?: string | null;

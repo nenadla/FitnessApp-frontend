@@ -69,14 +69,14 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Registrovan</th>
-        <td mat-cell *matCellDef="let user">{{ user.createdAt | date: 'dd.MM.yyyy. HH:mm' }}</td>
+      <ng-container matColumnDef="package">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Paket</th>
+        <td mat-cell *matCellDef="let user">{{ getPackageLabel(user) }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="verifiedAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Verifikovan</th>
-        <td mat-cell *matCellDef="let user">{{ user.verifiedAt ? (user.verifiedAt | date: 'dd.MM.yyyy. HH:mm') : '-' }}</td>
+      <ng-container matColumnDef="remainingSessions">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Preostali treninzi</th>
+        <td mat-cell *matCellDef="let user">{{ getRemainingSessions(user) }}</td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
