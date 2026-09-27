@@ -2,8 +2,8 @@
     <div class="flex flex-col relative">
         <label
             class="flex items-center w-fit bg-bg_primary rounded-md px-1 absolute left-2 -translate-y-1/2 top-1/2 text-sm text-primary_h"
-            [class.top-0!]="isFocused() || fieldValue()"
-            [class.text-xs!]="isFocused() || fieldValue()"
+            [class.top-0!]="isFocused() || hasValue()"
+            [class.text-xs!]="isFocused() || hasValue()"
             [class.text-text_secondary_h!]="isFocused()"
             for="text-input-{{label().split(' ').join('-')}}"
         >

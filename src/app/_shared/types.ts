@@ -650,6 +650,7 @@ export interface MobileDataCardDetail {
   label: string;
   value: string | number | null | undefined;
   clickable?: boolean;
+  appearance?: 'link' | 'text';
 }
 
 export type MobileDataCardStatusTone = 'success' | 'error' | 'primary';
@@ -904,6 +905,28 @@ export type UserStatusAction = 'verify' | 'block' | 'unblock';
 
 export interface UserStatusDialogData {
   user: UserListResponse;
+}
+
+export interface UpdateBalanceRequest {
+  remainingSessions: number;
+}
+
+export interface BalanceResponse {
+  id: string;
+  userId: string;
+  remainingSessions: number;
+  isActive: boolean;
+}
+
+export interface RemainingSessionsDialogData {
+  balanceId: string;
+  userFullName: string;
+  remainingSessions: number;
+}
+
+export interface RemainingSessionsDialogResult {
+  saved: true;
+  message: string;
 }
 
 export enum PurchaseType {

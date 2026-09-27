@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, Injector, input, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, Injector, input, OnInit, output, signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Field, FieldState, FormField, form } from '@angular/forms/signals';
 import { Icon } from "../../_components/icon/icon";
@@ -29,6 +29,10 @@ export class TextInputComponent implements OnInit {
   onChange = output<any>();
 
   isFocused = signal(false);
+  readonly hasValue = computed(() => {
+    const value = this.field()().value();
+    return value !== null && value !== undefined && value !== '';
+  });
 
   private get state(): FieldState<any> { return this.field()(); }
 

@@ -9,10 +9,11 @@ import { Icon } from '../../../_components/icon/icon';
 import { MobileDataCard } from '../../../_components/mobile-data-card/mobile-data-card';
 import { Pages, PurchaseTypeLabels, Titles, UserStatusLabels } from '../../../_shared/constants';
 import { handle } from '../../../_shared/http-handler';
-import { MobileDataCardStatusTone, PurchaseType, UserListResponse, UserStatus, UserStatusAction } from '../../../_shared/types';
+import { MobileDataCardDetail, MobileDataCardStatusTone, PurchaseType, RemainingSessionsDialogData, RemainingSessionsDialogResult, UserListResponse, UserStatus, UserStatusAction } from '../../../_shared/types';
 import { SharedService } from '../../../_services/shared.service';
 import { UsersService } from '../../../_services/users.service';
 import { UserStatusDialog } from './user-status-dialog/user-status-dialog';
+import { RemainingSessionsDialog } from './remaining-sessions-dialog/remaining-sessions-dialog';
 
 @Component({
   selector: 'app-admin-users',
@@ -93,13 +94,38 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
     return user.activePackage?.remainingSessions ?? user.totalRemainingSessions ?? '-';
   }
 
-  protected userDetails(user: UserListResponse) {
+  protected userDetails(user: UserListResponse): MobileDataCardDetail[] {
     return [
       { label: 'Email', value: user.email },
       { label: 'Telefon', value: user.phoneNumber || '-' },
       { label: 'Paket', value: this.getPackageLabel(user) },
-      { label: 'Preostali treninzi', value: this.getRemainingSessions(user) },
+      { label: 'Preostali treninzi', value: this.getRemainingSessions(user), clickable: !!user.activePackage?.id, appearance: 'text' },
     ];
+  }
+
+  protected openRemainingSessionsDialog(user: UserListResponse): void {
+    const balance = user.activePackage;
+    if (!balance?.id) return;
+
+    this.dialog
+      .open<RemainingSessionsDialog, RemainingSessionsDialogData, RemainingSessionsDialogResult>(RemainingSessionsDialog, {
+        autoFocus: false,
+        ariaLabelledBy: 'remaining-sessions-title',
+        data: {
+          balanceId: balance.id,
+          userFullName: user.fullName,
+          remainingSessions: balance.remainingSessions,
+        },
+        maxWidth: 'calc(100vw - 2rem)',
+        width: '28rem',
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (!result?.saved) return;
+
+        this.sharedService.toast.set({ show: true, title: 'Uspeh', text: result.message, type: 'success' });
+        this.refreshUsers();
+      });
   }
 
   protected openStatusDialog(user: UserListResponse): void {
@@ -161,6 +187,18 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
         response.data.pageSize,
         response.data.totalCount,
       ), (loading) => this.isLoading.set(loading)))
+      .subscribe();
+  }
+
+  private refreshUsers(): void {
+    this.loadTablePage(this.currentPage(), this.pageSize());
+    const mobilePageSize = Math.max(1, Math.ceil(this.mobileUsers().length / 20)) * 20;
+    this.usersService.getAll({ page: 1, pageSize: mobilePageSize })
+      .pipe(handle((response) => {
+        this.mobileUsers.set(response.data.items);
+        this.mobilePage.set(Math.max(1, Math.ceil(response.data.items.length / 20)));
+        this.mobileHasNextPage.set(response.data.items.length < response.data.totalCount);
+      }, (loading) => this.isLoadingMore.set(loading)))
       .subscribe();
   }
 

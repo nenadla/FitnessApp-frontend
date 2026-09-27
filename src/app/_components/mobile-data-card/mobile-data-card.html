@@ -30,7 +30,8 @@
           @if (detail.clickable) {
             <button
               type="button"
-              class="mt-0.5 block max-w-full truncate text-sm font-medium text-primary hover:text-primary_h hover:underline"
+              class="mt-0.5 block max-w-full cursor-pointer truncate rounded text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              [class]="detail.appearance === 'text' ? 'text-text_primary' : 'text-primary hover:text-primary_h hover:underline'"
               (click)="detailClick.emit(detail)"
             >
               {{ detail.value ?? '-' }}

@@ -14,6 +14,7 @@
           [status]="getStatusLabel(user.userStatus)"
           [statusTone]="getStatusTone(user.userStatus)"
           [details]="userDetails(user)"
+          (detailClick)="openRemainingSessionsDialog(user)"
         >
           <app-button-icon color="transparent" size="small" tooltip="Promeni status" (onClick)="openStatusDialog(user)">
             <app-icon icon="edit" class="size-4 stroke-current" />
@@ -76,7 +77,20 @@
 
       <ng-container matColumnDef="remainingSessions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Preostali treninzi</th>
-        <td mat-cell *matCellDef="let user">{{ getRemainingSessions(user) }}</td>
+        <td mat-cell *matCellDef="let user">
+          @if (user.activePackage?.id) {
+            <button
+              type="button"
+              class="-mx-2 cursor-pointer rounded px-2 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              [attr.aria-label]="'Izmeni broj preostalih treninga: ' + user.fullName"
+              (click)="openRemainingSessionsDialog(user)"
+            >
+              {{ getRemainingSessions(user) }}
+            </button>
+          } @else {
+            {{ getRemainingSessions(user) }}
+          }
+        </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

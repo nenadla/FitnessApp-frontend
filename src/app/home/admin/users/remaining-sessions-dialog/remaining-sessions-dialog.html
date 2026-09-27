@@ -1,0 +1,19 @@
+<form class="flex max-h-[calc(100dvh-2rem)] w-full flex-col bg-white" novalidate (submit)="submit($event)">
+  <div class="dialog-header shrink-0">
+    <h2 id="remaining-sessions-title" class="m-0 text-xl font-semibold text-neutral-900">Preostali treninzi</h2>
+    <app-button-icon class="ml-auto" color="transparent" tooltip="Zatvori" [disabled]="isSaving()" (onClick)="close()">
+      <app-icon icon="close" class="size-5 stroke-current" />
+    </app-button-icon>
+  </div>
+
+  <div class="dialog-content min-h-0 p-6">
+    <p class="mb-2 text-sm text-neutral-700">Korisnik: <strong>{{ data.userFullName }}</strong></p>
+    <p class="mb-6 text-sm text-neutral-500">Unesite novi broj preostalih treninga.</p>
+    <app-text-input label="Broj preostalih treninga" type="number" [field]="sessionsForm.remainingSessions" />
+  </div>
+
+  <div class="dialog-footer shrink-0">
+    <app-button [disabled]="isSaving()" (onClick)="close()">Odustani</app-button>
+    <app-button type="submit" color="primary" [loading]="isSaving()">Sačuvaj</app-button>
+  </div>
+</form>
