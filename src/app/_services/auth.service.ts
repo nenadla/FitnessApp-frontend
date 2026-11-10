@@ -12,7 +12,6 @@ import {
   RegisterRequest,
   RevokeTokenRequest,
   ResetPasswordRequest,
-  UserProfile,
   UserStatus,
 } from '../_shared/types';
 
@@ -79,11 +78,6 @@ export class AuthService {
 
   hasRefreshToken(): boolean {
     return this.getRefreshToken() !== null;
-  }
-
-  // Retained for the existing legacy guard until its routes are migrated.
-  getUserProfile() {
-    return this.http.get<UserProfile>(`${environment.apiUrl}/api/users/me`);
   }
 
   clearSession(): void {
