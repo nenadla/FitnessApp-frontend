@@ -1,6 +1,7 @@
 <button
     matTooltipShowDelay="300" 
     [matTooltip] = "tooltip()"
+    [attr.aria-label]="tooltip() || null"
     class="custom-button"
     [disabled]="disabled()"
     matRipple 

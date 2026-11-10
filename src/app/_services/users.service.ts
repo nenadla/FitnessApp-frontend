@@ -11,6 +11,10 @@ export class UsersService {
   getAll(request: UserListRequest = { page: 1, pageSize: 500 }) {
     let params = new HttpParams();
 
+    if (request.favoritesOnly !== undefined) {
+      params = params.set('favoritesOnly', request.favoritesOnly);
+    }
+
     if (request.page !== undefined) {
       params = params.set('page', request.page);
     }
@@ -28,6 +32,12 @@ export class UsersService {
     }
 
     return this.http.get<ApiResponse<UserPaginatedResponse>>(this.usersUrl, { params });
+  }
+
+  setFavorite(id: string, isFavorite: boolean) {
+    return this.http.put<ApiResponse<EmptyResponse>>(`${this.usersUrl}/${id}/favorite`, null, {
+      params: { isFavorite },
+    });
   }
 
   verify(id: string) {

@@ -173,7 +173,7 @@ export class AddPaymentDialog implements OnInit {
 
   private loadUsers(): void {
     this.usersService
-      .getAll()
+      .getAll({ page: 1, pageSize: 500, favoritesOnly: false })
       .pipe(handle((response) => this.users.set(response.data.items), (loading) => this.isUsersLoading.set(loading)))
       .subscribe();
   }

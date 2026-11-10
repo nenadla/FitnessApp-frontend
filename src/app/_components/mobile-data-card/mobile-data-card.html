@@ -7,6 +7,8 @@
       }
     </div>
 
+    <ng-content select="[card-header-actions]" />
+
     @if (status()) {
       <span
         class="shrink-0 rounded-full px-2 py-1 text-[0.6875rem] font-bold uppercase"

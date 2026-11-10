@@ -872,6 +872,7 @@ export interface TrainingReservationsDialogData {
 
 export interface UserListResponse {
   id: string;
+  isFavorite: boolean;
   firstName: string;
   lastName: string;
   fullName: string;
@@ -887,6 +888,7 @@ export interface UserListResponse {
 }
 
 export interface UserListRequest {
+  favoritesOnly?: boolean;
   page?: number;
   pageSize?: number;
   status?: UserStatus;

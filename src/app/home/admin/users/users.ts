@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, inject, signal, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -14,10 +14,12 @@ import { SharedService } from '../../../_services/shared.service';
 import { UsersService } from '../../../_services/users.service';
 import { UserStatusDialog } from './user-status-dialog/user-status-dialog';
 import { RemainingSessionsDialog } from './remaining-sessions-dialog/remaining-sessions-dialog';
+import { ToggleSliderComponent } from '../../../_components/toggle-slider/toggle-slider.component';
+import { of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-admin-users',
-  imports: [Button, ButtonIcon, Icon, MatPaginatorModule, MatSortModule, MatTableModule, MobileDataCard],
+  imports: [Button, ButtonIcon, Icon, MatPaginatorModule, MatSortModule, MatTableModule, MobileDataCard, ToggleSliderComponent],
   templateUrl: './users.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,6 +34,12 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
   protected readonly mobileUsers = signal<UserListResponse[]>([]);
   protected readonly isLoading = signal(false);
   protected readonly isLoadingMore = signal(false);
+  protected readonly favoritesOnly = signal(true);
+  private readonly favoritesOnlyParam = computed(() => this.favoritesOnly() ? undefined : false);
+  protected readonly pendingFavorites = signal<ReadonlySet<string>>(new Set());
+  protected readonly favoriteActionsDisabled = computed(() =>
+    this.pendingFavorites().size > 0 || this.isLoading() || this.isLoadingMore()
+  );
   protected readonly currentPage = signal(1);
   protected readonly pageSize = signal(20);
   protected readonly paginatorLength = signal(0);
@@ -56,10 +64,43 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
     this.loadTablePage(event.pageIndex + 1, event.pageSize);
   }
 
-  protected loadMoreMobile(): void {
-    if (!this.mobileHasNextPage() || this.isLoadingMore()) return;
+  protected changeFavoritesOnly(favoritesOnly: boolean): void {
+    if (favoritesOnly === this.favoritesOnly() || this.isLoading() || this.isLoadingMore() || this.pendingFavorites().size) return;
 
-    this.usersService.getAll({ page: this.mobilePage() + 1, pageSize: 20 })
+    this.favoritesOnly.set(favoritesOnly);
+    this.currentPage.set(1);
+    this.mobilePage.set(1);
+    this.mobileUsers.set([]);
+    this.mobileHasNextPage.set(false);
+    this.loadUsers();
+  }
+
+  protected toggleFavorite(user: UserListResponse): void {
+    if (this.favoriteActionsDisabled()) return;
+
+    const isFavorite = !user.isFavorite;
+    this.usersService.setFavorite(user.id, isFavorite)
+      .pipe(handle(() => {
+        this.sharedService.toast.set({
+          show: true,
+          title: 'Uspeh',
+          text: isFavorite ? 'Korisnik je dodat u omiljene.' : 'Korisnik je uklonjen iz omiljenih.',
+          type: 'success',
+        });
+        this.refreshUsers();
+      }, (loading) => this.pendingFavorites.update((pending) => {
+        const updated = new Set(pending);
+        if (loading) updated.add(user.id);
+        else updated.delete(user.id);
+        return updated;
+      })))
+      .subscribe();
+  }
+
+  protected loadMoreMobile(): void {
+    if (!this.mobileHasNextPage() || this.isLoadingMore() || this.pendingFavorites().size) return;
+
+    this.usersService.getAll({ page: this.mobilePage() + 1, pageSize: 20, favoritesOnly: this.favoritesOnlyParam() })
       .pipe(handle((response) => {
         this.mobileUsers.update((users) => [...users, ...response.data.items]);
         this.mobilePage.set(response.data.page);
@@ -166,34 +207,41 @@ export class AdminUsersComponent implements AfterViewInit, OnInit {
 
   private loadUsers(): void {
     this.usersService
-      .getAll({ page: 1, pageSize: this.pageSize() })
+      .getAll({ page: 1, pageSize: this.pageSize(), favoritesOnly: this.favoritesOnlyParam() })
       .pipe(
         handle((response) => {
-          console.log(response);
           this.setTablePage(response.data.items, response.data.page, response.data.pageSize, response.data.totalCount);
-          this.mobileUsers.set(response.data.items);
-          this.mobilePage.set(response.data.page);
-          this.mobileHasNextPage.set(response.data.page < response.data.totalPages);
+          this.mobileUsers.set(response.data.items.slice(0, 20));
+          this.mobilePage.set(1);
+          this.mobileHasNextPage.set(response.data.totalCount > 20);
         }, (loading) => this.isLoading.set(loading)),
       )
       .subscribe();
   }
 
   private loadTablePage(page: number, pageSize: number): void {
-    this.usersService.getAll({ page, pageSize })
-      .pipe(handle((response) => this.setTablePage(
-        response.data.items,
-        response.data.page,
-        response.data.pageSize,
-        response.data.totalCount,
-      ), (loading) => this.isLoading.set(loading)))
+    this.usersService.getAll({ page, pageSize, favoritesOnly: this.favoritesOnlyParam() })
+      .pipe(
+        switchMap((response) => {
+          const lastPage = Math.max(1, response.data.totalPages);
+          return page > lastPage
+            ? this.usersService.getAll({ page: lastPage, pageSize, favoritesOnly: this.favoritesOnlyParam() })
+            : of(response);
+        }),
+        handle((response) => this.setTablePage(
+          response.data.items,
+          response.data.page,
+          response.data.pageSize,
+          response.data.totalCount,
+        ), (loading) => this.isLoading.set(loading)),
+      )
       .subscribe();
   }
 
   private refreshUsers(): void {
     this.loadTablePage(this.currentPage(), this.pageSize());
     const mobilePageSize = Math.max(1, Math.ceil(this.mobileUsers().length / 20)) * 20;
-    this.usersService.getAll({ page: 1, pageSize: mobilePageSize })
+    this.usersService.getAll({ page: 1, pageSize: mobilePageSize, favoritesOnly: this.favoritesOnlyParam() })
       .pipe(handle((response) => {
         this.mobileUsers.set(response.data.items);
         this.mobilePage.set(Math.max(1, Math.ceil(response.data.items.length / 20)));
